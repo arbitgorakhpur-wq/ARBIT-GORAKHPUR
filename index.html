@@ -1,143 +1,24 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <title>Car On-Road Price Calculator</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f7f6; padding: 20px; }
-        .calculator-box { max-width: 400px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: auto; }
-        
-        /* Company Name Styling */
-        .company-header {
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #2196F3;
-            padding-bottom: 10px;
-        }
-        .company-header h1 {
-            margin: 0;
-            font-size: 22px;
-            color: #0d47a1;
-            text-transform: uppercase;
-        }
-        .company-header p {
-            margin: 5px 0 0 0;
-            font-size: 12px;
-            color: #666;
-        }
-
-        h2 { text-align: center; color: #333; margin-top: 0; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-        
-        /* Discount input style to highlight */
-        input#discount { border-color: #4CAF50; color: #2e7d32; font-weight: bold; }
-
-        .result { margin-top: 20px; background: #e8f4fd; padding: 15px; border-radius: 4px; border-left: 5px solid #2196F3; }
-        .result h3 { margin: 0; color: #0d47a1; }
-    </style>
-</head>
-<body>
-
-<div class="calculator-box">
-    <!-- Company Name Header -->
-    <div class="company-header">
-        <h1>Arbit Automobiles Pvt Ltd</h1>
-        <p>Authorized Dealer</p>
-    </div>
-
-    <h2>Car Price Calculator</h2>
-    
-    <!-- Vehicle Dropdown -->
-    <div class="form-group">
-        <label>Select Car Model:</label>
-        <select id="carModel" name="car_model" onchange="updateDefaultPrices()">
-            <option value="swift" selected>Swift</option>
-            <option value="dzire">Dzire</option>
-            <option value="victoris">Victoris</option>
-            <option value="brezza">Brezza</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Ex-Showroom Price (₹):</label>
-        <input type="number" id="exShowroom" value="500000" oninput="calculatePrice()">
-    </div>
-    
-    <div class="form-group">
-        <label>RTO Charges (₹):</label>
-        <input type="number" id="rto" value="100000" oninput="calculatePrice()">
-    </div>
-    
-    <div class="form-group">
-        <label>Car Insurance (₹):</label>
-        <input type="number" id="insurance" value="24000" oninput="calculatePrice()">
-    </div>
-    
-    <div class="form-group">
-        <label>Extended Warranty / EW (₹):</label>
-        <input type="number" id="ew" value="0" oninput="calculatePrice()">
-    </div>
-
-    <div class="form-group">
-        <label>Other Accessories / Charges (₹):</label>
-        <input type="number" id="other" value="0" oninput="calculatePrice()">
-    </div>
-
-    <!-- New Discount Column -->
-    <div class="form-group">
-        <label>Less: Discount / Offers (₹):</label>
-        <input type="number" id="discount" value="0" placeholder="Jaise: 20000" oninput="calculatePrice()">
-    </div>
-    
-    <div class="result">
-        <h3>Total On-Road Price: <span id="totalPrice">₹ 0</span></h3>
-    </div>
-</div>
-
-<script>
-// Page load hone par default calculation run karne ke liye
-window.onload = function() {
-    calculatePrice();
-};
-
-function calculatePrice() {
-    let exShowroom = parseFloat(document.getElementById('exShowroom').value) || 0;
-    let rto = parseFloat(document.getElementById('rto').value) || 0;
-    let insurance = parseFloat(document.getElementById('insurance').value) || 0;
-    let ew = parseFloat(document.getElementById('ew').value) || 0;
-    let other = parseFloat(document.getElementById('other').value) || 0;
-    let discount = parseFloat(document.getElementById('discount').value) || 0;
-    
-    // Total cost nikal kar usme se discount minus kiya gaya hai
-    let subTotal = exShowroom + rto + insurance + ew + other;
-    let total = subTotal - discount;
-    
-    if (total < 0) total = 0; // Negative price na jaye
-    
-    document.getElementById('totalPrice').innerText = '₹ ' + total.toLocaleString('en-IN');
-}
-
 function updateDefaultPrices() {
     let selectedModel = document.getElementById('carModel').value;
-    
-    // Agar user Swift select karta hai toh aapke diye gaye default values set ho jayenge
+
     if (selectedModel === 'swift') {
         document.getElementById('exShowroom').value = 500000;
         document.getElementById('rto').value = 100000;
         document.getElementById('insurance').value = 24000;
         document.getElementById('discount').value = 0;
+
+    } else if (selectedModel === 'dzire') {
+        document.getElementById('exShowroom').value = 700000;
+        document.getElementById('rto').value = 100000;
+        document.getElementById('insurance').value = 24000;
+        document.getElementById('discount').value = 0;
+
     } else {
-        // Baaki models ke liye aap apne hisab se default values rakh sakte hain ya blank chhod sakte hain
         document.getElementById('exShowroom').value = '';
         document.getElementById('rto').value = '';
         document.getElementById('insurance').value = '';
         document.getElementById('discount').value = '';
     }
+
     calculatePrice();
 }
-</script>
-
-</body>
-</html>
