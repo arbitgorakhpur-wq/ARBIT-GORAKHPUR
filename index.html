@@ -1,445 +1,378 @@
-<!DOCTYPE html>
+# Let's generate a complete standalone HTML web app containing all 149 variants across all 10 Maruti Suzuki model families
+html_code = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbit Automobiles - Price & On-Road Quotation Calculator</title>
+    <title>Arbit Automobiles Pvt. Ltd. - Price Quotation & On-Road Estimator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         :root {
-            --primary-color: #0f2c59;
-            --secondary-color: #1f4e79;
-            --accent-color: #d97706;
-            --light-bg: #f8fafc;
-            --card-border: #e2e8f0;
+            --primary-blue: #0d47a1;
+            --accent-red: #d32f2f;
+            --dark-bg: #1a237e;
+            --light-bg: #f8f9fa;
         }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--light-bg);
-            color: #1e293b;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
         }
-
         .header-banner {
-            background: linear-gradient(135deg, #0f2c59 0%, #1e3a8a 100%);
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--primary-blue) 100%);
             color: white;
-            padding: 28px 0;
-            border-bottom: 4px solid #f59e0b;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 2.5rem 1rem;
+            border-bottom: 5px solid var(--accent-red);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
-
-        .badge-dealership {
+        .dealer-badge {
             background-color: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 0.85rem;
+            border-radius: 30px;
+            padding: 5px 18px;
+            font-size: 0.9rem;
             display: inline-block;
         }
-
         .card-custom {
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            background: #ffffff;
-            transition: all 0.3s ease;
-        }
-
-        .form-select-lg, .form-control-lg {
-            border-radius: 10px;
-            font-size: 1rem;
-            border-color: #cbd5e1;
-        }
-
-        .form-select-lg:focus, .form-control-lg:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(31, 78, 121, 0.15);
-        }
-
-        .quote-box {
-            background: #f1f5f9;
-            border-left: 5px solid var(--secondary-color);
-            padding: 24px;
+            border: none;
             border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease-in-out;
+            background: white;
         }
-
-        .price-row {
-            font-size: 1rem;
-            padding: 10px 0;
-            border-bottom: 1px dashed #cbd5e1;
+        .summary-card {
+            background: linear-gradient(145deg, #ffffff, #f0f4f9);
+            border-left: 5px solid var(--primary-blue);
         }
-
-        .price-row:last-child {
-            border-bottom: none;
-        }
-
-        .grand-total {
-            background: linear-gradient(135deg, #1e3a8a 0%, #0f2c59 100%);
-            color: white;
-            border-radius: 10px;
-            padding: 16px;
-            font-size: 1.35rem;
+        .price-tag {
+            font-size: 1.8rem;
             font-weight: 700;
-            box-shadow: 0 4px 12px rgba(15, 44, 89, 0.25);
+            color: var(--primary-blue);
         }
-
-        /* Print Optimized Styling */
+        .table-custom th {
+            background-color: #eef2f7;
+            color: #2c3e50;
+        }
+        .nav-tabs .nav-link {
+            font-weight: 600;
+            color: #555;
+            border-radius: 8px 8px 0 0;
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--primary-blue);
+            border-bottom: 3px solid var(--primary-blue);
+            background-color: white;
+        }
         @media print {
-            .no-print {
-                display: none !important;
-            }
-            body {
-                background-color: white !important;
-                color: black !important;
-            }
-            .container {
-                max-width: 100% !important;
-                width: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            .card-custom {
-                box-shadow: none !important;
-                border: 1px solid #ccc !important;
-            }
-            .header-banner {
-                background: none !important;
-                color: black !important;
-                border-bottom: 2px solid #000 !important;
-                padding: 10px 0 !important;
-            }
-            .badge-dealership {
-                color: black !important;
-                border: 1px solid #666 !important;
-            }
-            .quote-box {
-                background: #f8fafc !important;
-                border-left: 4px solid #000 !important;
-            }
-            .grand-total {
-                background: #f1f5f9 !important;
-                color: black !important;
-                border: 2px solid #000 !important;
-            }
+            .no-print { display: none !important; }
+            .header-banner { padding: 1rem; background: none !important; color: black !important; }
+            body { background: white !important; }
+            .card-custom { box-shadow: none !important; border: 1px solid #ccc !important; }
         }
     </style>
 </head>
 <body>
 
-    <header class="header-banner text-center">
+    <!-- Header Banner -->
+    <header class="header-banner text-center mb-4">
         <div class="container">
-            <span class="badge-dealership mb-2"><i class="fa-solid fa-award me-1"></i> Authorised Maruti Suzuki Arena Dealer</span>
-            <h1 class="fw-bold fs-2 mb-1"><i class="fa-solid fa-car-rear me-2"></i>Arbit Automobiles Pvt. Ltd.</h1>
-            <p class="mb-0 text-light opacity-90"><i class="fa-solid fa-location-dot me-1 text-warning"></i> Falmandi, Transport Nagar, Gorakhpur, UP (53)</p>
+            <div class="dealer-badge mb-2"><i class="bi bi-geo-alt-fill me-1"></i> Falmandi, Transport Nagar, Gorakhpur (UP 53)</div>
+            <h1 class="fw-bold display-5 mb-1">ARBIT AUTOMOBILES PVT. LTD.</h1>
+            <p class="lead mb-0 text-white-50">Authorized Dealer - Maruti Suzuki Arena & Commercial</p>
         </div>
     </header>
 
-    <main class="container my-4 mb-5" style="max-width: 950px;">
+    <div class="container mb-5">
         
-        <!-- Model & Variant Selector Card -->
-        <div class="card card-custom p-4 mb-4">
-            <h4 class="fw-bold text-dark mb-3"><i class="fa-solid fa-sliders text-primary me-2"></i>Select Model & Variant</h4>
-            <div class="row g-3">
-                
-                <!-- Model Dropdown -->
-                <div class="col-md-6">
-                    <label for="modelSelect" class="form-label fw-semibold text-secondary">1. Choose Car Model</label>
-                    <select id="modelSelect" class="form-select form-select-lg" onchange="onModelChange()">
-                        <option value="">-- Select Model --</option>
+        <!-- Controls Row -->
+        <div class="row g-3 mb-4 no-print">
+            <div class="col-md-5">
+                <div class="card card-custom p-3">
+                    <label for="categorySelect" class="form-label fw-bold text-secondary"><i class="bi bi-car-front-fill me-1"></i> 1. Select Model Category</label>
+                    <select id="categorySelect" class="form-select form-select-lg" onchange="onCategoryChange()">
                     </select>
                 </div>
-
-                <!-- Variant Dropdown -->
-                <div class="col-md-6">
-                    <label for="variantSelect" class="form-label fw-semibold text-secondary">2. Choose Variant</label>
-                    <select id="variantSelect" class="form-select form-select-lg" onchange="onVariantChange()" disabled>
-                        <option value="">-- Select Model First --</option>
-                    </select>
-                </div>
-
             </div>
-        </div>
-
-        <!-- Price Details Breakdown Card -->
-        <div id="priceDetailsCard" class="card card-custom p-4 d-none">
-            
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <span class="badge bg-primary mb-1">On-Road Quote</span>
-                    <h3 class="fw-bold text-dark mb-0" id="selectedVariantName">-</h3>
+            <div class="col-md-5">
+                <div class="card card-custom p-3">
+                    <label for="variantSelect" class="form-label fw-bold text-secondary"><i class="bi bi-gear-wide-connected me-1"></i> 2. Select Variant</label>
+                    <select id="variantSelect" class="form-select form-select-lg" onchange="onVariantChange()">
+                    </select>
                 </div>
-                <button class="btn btn-outline-dark btn-sm no-print px-3 py-2 fw-semibold" onclick="window.print()">
-                    <i class="fa-solid fa-print me-1"></i> Print / Download PDF
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-outline-primary btn-lg w-100 h-100" onclick="window.print()">
+                    <i class="bi bi-printer-fill me-1"></i> Print / Save PDF
                 </button>
             </div>
+        </div>
+
+        <!-- Main Display Content -->
+        <div class="row g-4">
             
-            <hr class="mt-2 mb-4">
-
-            <div class="row g-4">
-                <!-- Inputs Section (Optional Accessories & Discounts) -->
-                <div class="col-md-5 no-print">
-                    <div class="bg-light p-3 rounded-3 border">
-                        <h5 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-calculator me-2"></i>Custom Adjustments</h5>
-                        
-                        <div class="mb-3">
-                            <label for="accInput" class="form-label text-muted fw-medium">Accessories Charges (₹)</label>
-                            <div class="input-group">
-                                <span class="input-group-text">₹</span>
-                                <input type="number" id="accInput" class="form-control" value="0" min="0" oninput="calculateTotal()">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="discInput" class="form-label text-muted fw-medium">Consumer / Exchange Offers (₹)</label>
-                            <div class="input-group">
-                                <span class="input-group-text">₹</span>
-                                <input type="number" id="discInput" class="form-control text-success fw-bold" value="0" min="0" oninput="calculateTotal()">
-                            </div>
-                        </div>
-
-                        <p class="small text-muted mb-0"><i class="fa-solid fa-circle-info me-1"></i> Note: Discounts will be subtracted directly from total on-road price.</p>
+            <!-- Price Calculation Breakdown -->
+            <div class="col-lg-7">
+                <div class="card card-custom p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                        <h4 class="fw-bold text-primary mb-0" id="selectedVariantTitle">Variant Price Breakdown</h4>
+                        <span class="badge bg-primary px-3 py-2" id="categoryBadge">Category</span>
                     </div>
-                </div>
 
-                <!-- Price Breakdown Table -->
-                <div class="col-md-7">
-                    <div class="quote-box">
-                        <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-file-invoice-dollar me-2 text-primary"></i>On-Road Breakdown (UP 53)</h5>
-                        
-                        <div class="d-flex justify-content-between price-row">
-                            <span class="text-secondary">Ex-Showroom Price:</span>
-                            <span class="fw-bold" id="pExShowroom">₹0.00</span>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between price-row">
-                            <span class="text-secondary">RTO Charges (Gorakhpur UP 53):</span>
-                            <span class="fw-bold" id="pRto">₹0.00</span>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between price-row">
-                            <span class="text-secondary">Zero Dep Insurance:</span>
-                            <span class="fw-bold" id="pIns">₹0.00</span>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between price-row">
-                            <span class="text-secondary">FASTag Fee:</span>
-                            <span class="fw-bold" id="pFastag">₹600.00</span>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between price-row">
-                            <span class="text-secondary">1% TCS / TDS:</span>
-                            <span class="fw-bold text-danger" id="pTcs">₹0.00</span>
-                        </div>
+                    <table class="table table-hover table-custom align-middle">
+                        <tbody>
+                            <tr>
+                                <td><i class="bi bi-tag-fill me-2 text-primary"></i> <strong>Ex-Showroom Price</strong></td>
+                                <td class="text-end fw-bold fs-5" id="valExShowroom">₹0</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-file-earmark-text-fill me-2 text-secondary"></i> RTO Registration Charges (UP 53)</td>
+                                <td class="text-end text-dark" id="valRto">₹0</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-shield-check me-2 text-success"></i> Zero Dep Insurance</td>
+                                <td class="text-end text-dark" id="valInsurance">₹0</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-broadcast me-2 text-warning"></i> FASTag Charges</td>
+                                <td class="text-end text-dark" id="valFastag">₹600</td>
+                            </tr>
+                            <tr id="tcsRow" style="display: none;">
+                                <td><i class="bi bi-receipt me-2 text-danger"></i> 1% TCS (Applicable above ₹10 Lakhs)</td>
+                                <td class="text-end text-danger fw-bold" id="valTcs">₹0</td>
+                            </tr>
+                            <tr class="table-primary border-top border-3">
+                                <td class="fw-bold fs-4 text-primary">Total On-Road Price</td>
+                                <td class="text-end fw-bold fs-3 text-primary" id="valOnRoad">₹0</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                        <div class="d-flex justify-content-between price-row no-print">
-                            <span class="text-secondary">Accessories (+):</span>
-                            <span class="fw-bold text-dark" id="pAcc">₹0.00</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between price-row text-success no-print">
-                            <span>Discounts / Offer (-):</span>
-                            <span class="fw-bold" id="pDisc">₹0.00</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between grand-total mt-4 align-items-center">
-                            <span>Estimated On-Road Total:</span>
-                            <span id="pTotalOnRoad">₹0.00</span>
-                        </div>
+                    <div class="alert alert-light border mt-3 mb-0 text-muted small">
+                        <i class="bi bi-info-circle me-1"></i> Note: Prices are indicative and subject to change as per government norms & Maruti Suzuki guidelines. FASTag mandatory fee ₹600 is included.
                     </div>
                 </div>
             </div>
 
-            <!-- Quotation Footer Notes -->
-            <div class="mt-4 pt-3 border-top text-muted small">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p class="mb-1"><strong>Terms & Conditions:</strong></p>
-                        <ul class="ps-3 mb-0">
-                            <li>Prices are indicative and subject to change without prior notice.</li>
-                            <li>Price ruling at the time of delivery will be applicable.</li>
-                        </ul>
+            <!-- On-Road Estimator & Loan Calculator -->
+            <div class="col-lg-5">
+                <div class="card card-custom p-4 summary-card h-100">
+                    <h4 class="fw-bold text-dark mb-3"><i class="bi bi-calculator-fill me-2 text-primary"></i> EMI & Finance Estimator</h4>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted">Down Payment (₹)</label>
+                        <input type="number" id="inputDownPayment" class="form-control form-control-lg" value="100000" step="10000" oninput="calculateEMI()">
                     </div>
-                    <div class="col-md-6 text-md-end mt-2 mt-md-0">
-                        <p class="mb-1"><strong>Arbit Automobiles Pvt. Ltd.</strong></p>
-                        <p class="mb-0">Gorakhpur | Contact Dealer for Final Offer</p>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted">Loan Interest Rate (% p.a.)</label>
+                        <input type="number" id="inputInterest" class="form-control" value="8.75" step="0.25" oninput="calculateEMI()">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted">Tenure (Years)</label>
+                        <select id="selectTenure" class="form-select" onchange="calculateEMI()">
+                            <option value="3">3 Years (36 Months)</option>
+                            <option value="5" selected>5 Years (60 Months)</option>
+                            <option value="7">7 Years (84 Months)</option>
+                        </select>
+                    </div>
+
+                    <hr>
+
+                    <div class="p-3 bg-white rounded shadow-sm">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Loan Amount:</span>
+                            <strong id="valLoanAmount">₹0</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Estimated Monthly EMI:</span>
+                            <span class="price-tag text-success" id="valEMI">₹0</span>
+                        </div>
+                        <small class="text-muted d-block text-center">*Estimated based on reducing balance interest rate.</small>
                     </div>
                 </div>
             </div>
 
         </div>
 
-    </main>
+        <!-- Full Price List Table -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="fw-bold text-dark mb-0"><i class="bi bi-table me-2 text-primary"></i> Complete Price Directory</h4>
+                        <input type="text" id="tableSearch" class="form-control w-auto no-print" placeholder="Search variant or model..." onkeyup="filterTable()">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" id="fullPriceTable">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Model Variant</th>
+                                    <th>Ex-Showroom (₹)</th>
+                                    <th>RTO (UP 53) (₹)</th>
+                                    <th>Zero Dep Ins. (₹)</th>
+                                    <th>FASTag (₹)</th>
+                                    <th>Est. On-Road (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+    </div>
+
+    <!-- Embedded Database JSON -->
     <script>
-        // Full Car Database with Dzire image data included
-        const carDatabase = {
-            "DAZZLING NEW DZIRE": [
-                { name: "MARUTI DZIRE LXI 1.2L ISS 5MT", ex: 630789, rto: 59071, ins: 43986 },
-                { name: "MARUTI DZIRE VXI 1.2L ISS 5MT", ex: 727288, rto: 67756, ins: 48160 },
-                { name: "MARUTI DZIRE ZXI 1.2L ISS 5MT", ex: 827888, rto: 76810, ins: 53752 },
-                { name: "MARUTI DZIRE ZXI+ 1.2L ISS 5MT", ex: 896489, rto: 82984, ins: 55590 },
-                { name: "MARUTI DZIRE VXI 1.2L ISS AGS", ex: 772289, rto: 71806, ins: 49130 },
-                { name: "MARUTI DZIRE ZXI 1.2L ISS AGS", ex: 872889, rto: 80860, ins: 55633 },
-                { name: "MARUTI DZIRE ZXI+ 1.2L ISS AGS", ex: 941488, rto: 87034, ins: 57567 },
-                { name: "MARUTI DZIRE VXI CNG 1.2L 5MT", ex: 818289, rto: 75946, ins: 54826 },
-                { name: "MARUTI DZIRE ZXI CNG 1.2L 5MT", ex: 918889, rto: 85000, ins: 57185 },
-                { name: "MARUTI TOUR S 1.2L ISS 5MT", ex: 628988, rto: 58909, ins: 45500 },
-                { name: "MARUTI TOUR S CNG 1.2L 5MT", ex: 724988, rto: 67549, ins: 51500 },
-                { name: "MARUTI DZIRE VXI ISS CNG 1.2L AGS", ex: 853288, rto: 79096, ins: 56826 },
-                { name: "MARUTI DZIRE ZXI ISS CNG 1.2L AGS", ex: 953889, rto: 88150, ins: 59185 }
-            ],
-            "ALTO K10": [
-                { name: "MARUTI ALTO K10 STD 1L 5MT", ex: 370029.88, rto: 35602.69, ins: 26909 },
-                { name: "MARUTI ALTO K10 LXI 1L 5MT", ex: 400029.02, rto: 38302.61, ins: 29104 },
-                { name: "MARUTI ALTO K10 VXI 1L 5MT", ex: 452529.58, rto: 43027.66, ins: 30974 },
-                { name: "MARUTI ALTO K10 VXI+ 1L 5MT", ex: 500029.30, rto: 47302.64, ins: 32045 },
-                { name: "MARUTI ALTO K10 VXI 1L AGS", ex: 497530.06, rto: 47077.71, ins: 31838 },
-                { name: "MARUTI ALTO K10 VXI+ 1L AGS", ex: 545029.78, rto: 51352.68, ins: 33910 },
-                { name: "MARUTI ALTO K10 LXI CNG 1L 5MT", ex: 484530.00, rto: 45907.70, ins: 32708 },
-                { name: "MARUTI ALTO K10 VXI CNG 1L 5MT", ex: 534528.96, rto: 50407.61, ins: 34572 }
-            ],
-            "CELERIO": [
-                { name: "MARUTI CELERIO LXI 1L ISS 5MT", ex: 470058.90, rto: 44605.30, ins: 29222 },
-                { name: "MARUTI CELERIO VXI 1L ISS 5MT", ex: 518559.26, rto: 48970.33, ins: 32707 },
-                { name: "MARUTI CELERIO VXI CNG 1L 5MT", ex: 598059.40, rto: 56125.35, ins: 37332 },
-                { name: "MARUTI CELERIO ZXI+ 1L ISS AGS", ex: 618559.54, rto: 57970.36, ins: 36846 }
-            ],
-            "S-PRESSO": [
-                { name: "MARUTI S-PRESSO STD 1L ISS 5MT", ex: 426529.00, rto: 40600.00, ins: 28500 },
-                { name: "MARUTI S-PRESSO VXI 1L ISS 5MT", ex: 452529.58, rto: 43027.66, ins: 30974 },
-                { name: "MARUTI S-PRESSO VXI CNG", ex: 590529.00, rto: 55400.00, ins: 36500 }
-            ],
-            "WAGON R": [
-                { name: "MARUTI WAGON R LXI 1L ISS 5MT", ex: 554500.00, rto: 52000.00, ins: 31000 },
-                { name: "MARUTI WAGON R VXI 1L ISS 5MT", ex: 518559.26, rto: 48970.33, ins: 32707 },
-                { name: "MARUTI WAGON R VXI CNG 1L 5MT", ex: 618559.54, rto: 57970.36, ins: 38846 },
-                { name: "MARUTI WAGON R ZXI+ 1.2L ISS AGS", ex: 698500.00, rto: 65000.00, ins: 41000 }
-            ],
-            "EECO": [
-                { name: "MARUTI EECO 5 STR STD 1.2L 5MT", ex: 490000.00, rto: 46000.00, ins: 31500 },
-                { name: "MARUTI EECO 5 STR AC 1.2L 5MT", ex: 527029.00, rto: 49732.61, ins: 34100 },
-                { name: "MARUTI EECO 5 STR AC CNG", ex: 620000.00, rto: 58000.00, ins: 38500 }
-            ],
-            "EPIC NEW SWIFT": [
-                { name: "MARUTI SWIFT LXI 1.2L 5MT", ex: 649000.00, rto: 60500.00, ins: 38500 },
-                { name: "MARUTI SWIFT VXI 1.2L 5MT", ex: 729000.00, rto: 68000.00, ins: 42000 },
-                { name: "MARUTI SWIFT VXI CNG 1.2L 5MT", ex: 819500.00, rto: 76000.00, ins: 48200 },
-                { name: "MARUTI SWIFT ZXI+ 1.2L AMT", ex: 950000.00, rto: 88000.00, ins: 54000 }
-            ],
-            "NEW BREZZA": [
-                { name: "MARUTI BREZZA LXI 1.5L 5MT", ex: 834000.00, rto: 77500.00, ins: 42000 },
-                { name: "MARUTI BREZZA VXI 1.5L 6AT", ex: 1061123.09, rto: 119023.54, ins: 46200 },
-                { name: "MARUTI BREZZA ZXI 1.5L 6AT", ex: 1200724.00, rto: 134379.64, ins: 50500 },
-                { name: "MARUTI BREZZA ZXI+ 1.5L 6AT DUAL", ex: 1398000.00, rto: 156000.00, ins: 58000 }
-            ],
-            "NEW ERTIGA": [
-                { name: "MARUTI ERTIGA LXI 1.5L 5MT", ex: 869000.00, rto: 80500.00, ins: 45000 },
-                { name: "MARUTI ERTIGA VXI CNG 1.5L 5MT", ex: 1078000.00, rto: 120500.00, ins: 52000 },
-                { name: "MARUTI ERTIGA ZXI 1.5L 6AT", ex: 1236723.64, rto: 138339.60, ins: 69541 }
-            ],
-            "VICTORIS": [
-                { name: "MARUTI VICTORIS LXI 1.5L 5MT", ex: 1050000.00, rto: 117500.00, ins: 58000 },
-                { name: "MARUTI VICTORIS ZXI 1.5L 5MT", ex: 1362123.00, rto: 152133.53, ins: 76600 },
-                { name: "MARUTI VICTORIS ZXI+ 1.5L 6AT", ex: 1734124.00, rto: 193053.64, ins: 92500 }
-            ]
-        };
+        const vehicleData = """ + json.dumps(categories_db, indent=2) + """;
 
-        let currentSelectedVariant = null;
-
-        // Populate Model Dropdown on load
-        window.onload = function() {
-            const modelSelect = document.getElementById('modelSelect');
-            for (let modelName in carDatabase) {
-                const opt = document.createElement('option');
-                opt.value = modelName;
-                opt.textContent = modelName;
-                modelSelect.appendChild(opt);
+        function init() {
+            const catSelect = document.getElementById('categorySelect');
+            catSelect.innerHTML = '';
+            for (let cat in vehicleData) {
+                let opt = document.createElement('option');
+                opt.value = cat;
+                opt.innerText = cat;
+                catSelect.appendChild(opt);
             }
-        };
-
-        // Triggered when Model is selected
-        function onModelChange() {
-            const modelVal = document.getElementById('modelSelect').value;
-            const variantSelect = document.getElementById('variantSelect');
-            const priceCard = document.getElementById('priceDetailsCard');
-
-            variantSelect.innerHTML = '<option value="">-- Choose Variant --</option>';
-
-            if (!modelVal) {
-                variantSelect.disabled = true;
-                priceCard.classList.add('d-none');
-                return;
-            }
-
-            const variants = carDatabase[modelVal];
-            variants.forEach((v, index) => {
-                const opt = document.createElement('option');
-                opt.value = index;
-                opt.textContent = v.name;
-                variantSelect.appendChild(opt);
-            });
-
-            variantSelect.disabled = false;
-            priceCard.classList.add('d-none');
+            onCategoryChange();
+            renderFullTable();
         }
 
-        // Triggered when Variant is selected
-        function onVariantChange() {
-            const modelVal = document.getElementById('modelSelect').value;
-            const variantIdx = document.getElementById('variantSelect').value;
-            const priceCard = document.getElementById('priceDetailsCard');
-
-            if (variantIdx === "") {
-                priceCard.classList.add('d-none');
-                return;
-            }
-
-            currentSelectedVariant = carDatabase[modelVal][variantIdx];
-            document.getElementById('selectedVariantName').textContent = currentSelectedVariant.name;
+        function onCategoryChange() {
+            const catSelect = document.getElementById('categorySelect');
+            const varSelect = document.getElementById('variantSelect');
+            const cat = catSelect.value;
             
-            // Reset adjustments
-            document.getElementById('accInput').value = 0;
-            document.getElementById('discInput').value = 0;
-
-            calculateTotal();
-            priceCard.classList.remove('d-none');
+            varSelect.innerHTML = '';
+            vehicleData[cat].forEach((item, index) => {
+                let opt = document.createElement('option');
+                opt.value = index;
+                opt.innerText = item.name;
+                varSelect.appendChild(opt);
+            });
+            onVariantChange();
         }
 
-        // Helper function for Currency Formatting
-        function formatINR(val) {
-            return '₹' + Number(val).toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
-        }
+        function onVariantChange() {
+            const cat = document.getElementById('categorySelect').value;
+            const varIdx = document.getElementById('variantSelect').value;
+            const item = vehicleData[cat][varIdx];
 
-        // Calculate On-Road Price Breakdown
-        function calculateTotal() {
-            if (!currentSelectedVariant) return;
+            document.getElementById('selectedVariantTitle').innerText = item.name;
+            document.getElementById('categoryBadge').innerText = cat;
 
-            const ex = currentSelectedVariant.ex;
-            const rto = currentSelectedVariant.rto;
-            const ins = currentSelectedVariant.ins;
+            const ex = Math.round(item.ex);
+            const rto = Math.round(item.rto);
+            const ins = Math.round(item.ins);
             const fastag = 600;
+            let tcs = 0;
+            if (ex > 1000000) {
+                tcs = Math.round(ex * 0.01);
+                document.getElementById('tcsRow').style.display = '';
+            } else {
+                document.getElementById('tcsRow').style.display = 'none';
+            }
 
-            // 1% TCS condition (Ex-Showroom > 10 Lakhs)
-            const tcs = ex > 1000000 ? ex * 0.01 : 0;
+            const totalOnRoad = ex + rto + ins + fastag + tcs;
 
-            const acc = parseFloat(document.getElementById('accInput').value) || 0;
-            const disc = parseFloat(document.getElementById('discInput').value) || 0;
+            document.getElementById('valExShowroom').innerText = '₹' + ex.toLocaleString('en-IN');
+            document.getElementById('valRto').innerText = '₹' + rto.toLocaleString('en-IN');
+            document.getElementById('valInsurance').innerText = '₹' + ins.toLocaleString('en-IN');
+            document.getElementById('valFastag').innerText = '₹' + fastag.toLocaleString('en-IN');
+            document.getElementById('valTcs').innerText = '₹' + tcs.toLocaleString('en-IN');
+            document.getElementById('valOnRoad').innerText = '₹' + totalOnRoad.toLocaleString('en-IN');
 
-            const grandTotal = ex + rto + ins + fastag + tcs + acc - disc;
-
-            document.getElementById('pExShowroom').textContent = formatINR(ex);
-            document.getElementById('pRto').textContent = formatINR(rto);
-            document.getElementById('pIns').textContent = formatINR(ins);
-            document.getElementById('pFastag').textContent = formatINR(fastag);
-            document.getElementById('pTcs').textContent = formatINR(tcs);
-            document.getElementById('pAcc').textContent = formatINR(acc);
-            document.getElementById('pDisc').textContent = formatINR(disc);
-            document.getElementById('pTotalOnRoad').textContent = formatINR(grandTotal);
+            calculateEMI();
         }
+
+        function calculateEMI() {
+            const cat = document.getElementById('categorySelect').value;
+            const varIdx = document.getElementById('variantSelect').value;
+            const item = vehicleData[cat][varIdx];
+
+            const ex = Math.round(item.ex);
+            const rto = Math.round(item.rto);
+            const ins = Math.round(item.ins);
+            const fastag = 600;
+            let tcs = (ex > 1000000) ? Math.round(ex * 0.01) : 0;
+            const onRoad = ex + rto + ins + fastag + tcs;
+
+            let dp = parseFloat(document.getElementById('inputDownPayment').value) || 0;
+            if (dp > onRoad) dp = onRoad;
+            
+            let loan = onRoad - dp;
+            if (loan < 0) loan = 0;
+
+            document.getElementById('valLoanAmount').innerText = '₹' + loan.toLocaleString('en-IN');
+
+            let rate = parseFloat(document.getElementById('inputInterest').value) || 8.75;
+            let years = parseInt(document.getElementById('selectTenure').value) || 5;
+            let months = years * 12;
+            let r = rate / 12 / 100;
+
+            let emi = 0;
+            if (loan > 0 && r > 0) {
+                emi = Math.round((loan * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1));
+            }
+
+            document.getElementById('valEMI').innerText = '₹' + emi.toLocaleString('en-IN') + '/mo';
+        }
+
+        function renderFullTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            for (let cat in vehicleData) {
+                vehicleData[cat].forEach(item => {
+                    const ex = Math.round(item.ex);
+                    const rto = Math.round(item.rto);
+                    const ins = Math.round(item.ins);
+                    const fastag = 600;
+                    const tcs = (ex > 1000000) ? Math.round(ex * 0.01) : 0;
+                    const onRoad = ex + rto + ins + fastag + tcs;
+
+                    let tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><span class="badge bg-secondary">\${cat}</span></td>
+                        <td class="fw-semibold">\${item.name}</td>
+                        <td>₹\${ex.toLocaleString('en-IN')}</td>
+                        <td>₹\${rto.toLocaleString('en-IN')}</td>
+                        <td>₹\${ins.toLocaleString('en-IN')}</td>
+                        <td>₹\${fastag.toLocaleString('en-IN')}</td>
+                        <td class="fw-bold text-primary">₹\${onRoad.toLocaleString('en-IN')}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        function filterTable() {
+            let filter = document.getElementById('tableSearch').value.toUpperCase();
+            let trs = document.getElementById('tableBody').getElementsByTagName('tr');
+            for (let i = 0; i < trs.length; i++) {
+                let txt = trs[i].innerText;
+                if (txt.toUpperCase().indexOf(filter) > -1) {
+                    trs[i].style.display = "";
+                } else {
+                    trs[i].style.display = "none";
+                }
+            }
+        }
+
+        window.onload = init;
     </script>
 </body>
 </html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_code)
+
+print("index.html written successfully!")
