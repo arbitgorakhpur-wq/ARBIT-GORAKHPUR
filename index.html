@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maruti Suzuki ARENA - Dropdown Price List</title>
+  <title>Maruti Suzuki ARENA - Dropdown Price List with Image</title>
   <style>
     :root {
       --arena-red: #e31837;
@@ -47,7 +47,7 @@
       padding: 0 15px;
     }
 
-    /* Dropdown Section Styling */
+    /* Filter / Dropdown Section */
     .filter-box {
       background: white;
       padding: 20px;
@@ -79,11 +79,39 @@
       min-width: 250px;
     }
 
+    /* Car Preview Section */
+    .car-display-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .image-container {
+      background-color: #eef2f5;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 220px;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    .image-container img:hover {
+      transform: scale(1.03);
+    }
+
+    /* Table Section */
     .table-responsive {
       overflow-x: auto;
-      background: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border-radius: 8px;
     }
 
     table {
@@ -106,7 +134,6 @@
       font-size: 14px;
     }
 
-    /* Selected Model Banner */
     .model-title-row {
       background-color: var(--arena-blue) !important;
       color: white;
@@ -162,7 +189,7 @@
 
   <header>
     <h1>MARUTI SUZUKI ARENA</h1>
-    <p>Select Model from Dropdown to View Price List</p>
+    <p>Select Model from Dropdown to View Image & Detailed Price List</p>
   </header>
 
   <div class="container">
@@ -170,7 +197,7 @@
     <!-- DROPDOWN SELECTION -->
     <div class="filter-box">
       <label for="carModelSelect">Choose Car Model:</label>
-      <select id="carModelSelect" onchange="showCarPriceTable()">
+      <select id="carModelSelect" onchange="updateCarDetails()">
         <option value="brezza">Maruti Suzuki Brezza</option>
         <option value="swift">Maruti Suzuki Swift</option>
         <option value="dzire">Maruti Suzuki Dzire</option>
@@ -180,35 +207,46 @@
       </select>
     </div>
 
-    <!-- TABLE DISPLAY AREA -->
-    <div class="table-responsive">
-      <table>
-        <thead>
-          <tr>
-            <th>Variant Name</th>
-            <th>Engine / Fuel Type</th>
-            <th>Transmission</th>
-            <th>Ex-Showroom Price (Approx)</th>
-          </tr>
-        </thead>
-        <tbody id="priceTableBody">
-          <!-- Dropdown Change par JavaScript ke dwara data yahan load hoga -->
-        </tbody>
-      </table>
+    <!-- CAR DISPLAY CARD (IMAGE + TABLE) -->
+    <div class="car-display-card">
+      
+      <!-- IMAGE CONTAINER -->
+      <div class="image-container">
+        <img id="carImage" src="" alt="Car Image">
+      </div>
+
+      <!-- PRICE TABLE CONTAINER -->
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Variant Name</th>
+              <th>Engine / Fuel Type</th>
+              <th>Transmission</th>
+              <th>Ex-Showroom Price (Approx)</th>
+            </tr>
+          </thead>
+          <tbody id="priceTableBody">
+            <!-- Dropdown selection par JavaScript se content aayega -->
+          </tbody>
+        </table>
+      </div>
+
     </div>
 
   </div>
 
   <footer>
-    <p>* Ex-showroom prices mentioned are indicative and subject to change. RTO and Insurance extra.</p>
+    <p>* Ex-showroom prices mentioned are indicative and subject to change. Images are for representation purpose only.</p>
   </footer>
 
-  <!-- JAVASCRIPT FOR DROPDOWN FUNCTIONALITY -->
+  <!-- JAVASCRIPT FOR DYNAMIC IMAGE & TABLE UPDATE -->
   <script>
-    // Car Data Object
+    // Car Data Object with Image URLs and Variant Details
     const carData = {
       brezza: {
         title: "Maruti Suzuki Brezza (Compact SUV)",
+        imageUrl: "https://images.firstpost.com/uploads/2022/06/Maruti-Suzuki-Brezza.jpg",
         variants: [
           { name: "Brezza LXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 8,34,000" },
           { name: "Brezza VXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 9,69,000" },
@@ -220,6 +258,7 @@
       },
       swift: {
         title: "Maruti Suzuki Swift (Hatchback)",
+        imageUrl: "https://images.carandbike.com/car-images/large/maruti-suzuki/swift/maruti-suzuki-swift.jpg",
         variants: [
           { name: "Swift LXi", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", price: "₹ 6,49,000" },
           { name: "Swift VXi", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", price: "₹ 7,29,000" },
@@ -230,6 +269,7 @@
       },
       dzire: {
         title: "Maruti Suzuki Dzire (Compact Sedan)",
+        imageUrl: "https://imgd.aeplcdn.com/664x374/n/cw/ec/45691/dzire-exterior-right-front-three-quarter-3.jpeg",
         variants: [
           { name: "Dzire LXi", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 6,79,000" },
           { name: "Dzire VXi", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 7,79,000" },
@@ -239,6 +279,7 @@
       },
       ertiga: {
         title: "Maruti Suzuki Ertiga (7-Seater MPV)",
+        imageUrl: "https://imgd.aeplcdn.com/664x374/n/cw/ec/115871/ertiga-exterior-right-front-three-quarter.jpeg",
         variants: [
           { name: "Ertiga LXi (O)", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 8,69,000" },
           { name: "Ertiga VXi (O)", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 9,83,000" },
@@ -248,6 +289,7 @@
       },
       wagonr: {
         title: "Maruti Suzuki Wagon R (Tallboy Hatchback)",
+        imageUrl: "https://imgd.aeplcdn.com/664x374/n/cw/ec/112947/wagon-r-exterior-right-front-three-quarter.jpeg",
         variants: [
           { name: "Wagon R LXi 1.0L", engine: "1.0L Petrol", trans: "5-Speed Manual", price: "₹ 5,54,000" },
           { name: "Wagon R LXi 1.0L <span class='badge-cng'>CNG</span>", engine: "1.0L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 6,44,000" },
@@ -257,6 +299,7 @@
       },
       alto: {
         title: "Maruti Suzuki Alto K10 (Entry Hatchback)",
+        imageUrl: "https://imgd.aeplcdn.com/664x374/n/cw/ec/125253/alto-k10-exterior-right-front-three-quarter.jpeg",
         variants: [
           { name: "Alto K10 Std", engine: "1.0L Petrol", trans: "5-Speed Manual", price: "₹ 3,99,000" },
           { name: "Alto K10 VXi", engine: "1.0L Petrol", trans: "5-Speed Manual", price: "₹ 5,06,000" },
@@ -265,12 +308,18 @@
       }
     };
 
-    // Function to render table content based on selected dropdown value
-    function showCarPriceTable() {
+    // Function to update Image and Table
+    function updateCarDetails() {
       const selectedModel = document.getElementById('carModelSelect').value;
       const tableBody = document.getElementById('priceTableBody');
+      const carImage = document.getElementById('carImage');
       const selectedCarData = carData[selectedModel];
 
+      // Update Image
+      carImage.src = selectedCarData.imageUrl;
+      carImage.alt = selectedCarData.title;
+
+      // Build Table Header & Rows
       let htmlRows = `
         <tr class="model-title-row">
           <td colspan="4">${selectedCarData.title}</td>
@@ -291,9 +340,9 @@
       tableBody.innerHTML = htmlRows;
     }
 
-    // Load Brezza details by default when page loads
+    // Default Load (Page Load par Brezza set hoga)
     window.onload = function() {
-      showCarPriceTable();
+      updateCarDetails();
     };
   </script>
 
