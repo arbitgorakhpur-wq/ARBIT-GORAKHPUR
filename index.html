@@ -1,378 +1,51 @@
-# Let's generate a complete standalone HTML web app containing all 149 variants across all 10 Maruti Suzuki model families
-html_code = """<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbit Automobiles Pvt. Ltd. - Price Quotation & On-Road Estimator</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
-        :root {
-            --primary-blue: #0d47a1;
-            --accent-red: #d32f2f;
-            --dark-bg: #1a237e;
-            --light-bg: #f8f9fa;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-        }
-        .header-banner {
-            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--primary-blue) 100%);
-            color: white;
-            padding: 2.5rem 1rem;
-            border-bottom: 5px solid var(--accent-red);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        }
-        .dealer-badge {
-            background-color: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 30px;
-            padding: 5px 18px;
-            font-size: 0.9rem;
-            display: inline-block;
-        }
-        .card-custom {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-            transition: transform 0.2s ease-in-out;
-            background: white;
-        }
-        .summary-card {
-            background: linear-gradient(145deg, #ffffff, #f0f4f9);
-            border-left: 5px solid var(--primary-blue);
-        }
-        .price-tag {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-        }
-        .table-custom th {
-            background-color: #eef2f7;
-            color: #2c3e50;
-        }
-        .nav-tabs .nav-link {
-            font-weight: 600;
-            color: #555;
-            border-radius: 8px 8px 0 0;
-        }
-        .nav-tabs .nav-link.active {
-            color: var(--primary-blue);
-            border-bottom: 3px solid var(--primary-blue);
-            background-color: white;
-        }
-        @media print {
-            .no-print { display: none !important; }
-            .header-banner { padding: 1rem; background: none !important; color: black !important; }
-            body { background: white !important; }
-            .card-custom { box-shadow: none !important; border: 1px solid #ccc !important; }
-        }
-    </style>
-</head>
-<body>
+import os
+import json
+import pandas as pd
 
-    <!-- Header Banner -->
-    <header class="header-banner text-center mb-4">
-        <div class="container">
-            <div class="dealer-badge mb-2"><i class="bi bi-geo-alt-fill me-1"></i> Falmandi, Transport Nagar, Gorakhpur (UP 53)</div>
-            <h1 class="fw-bold display-5 mb-1">ARBIT AUTOMOBILES PVT. LTD.</h1>
-            <p class="lead mb-0 text-white-50">Authorized Dealer - Maruti Suzuki Arena & Commercial</p>
-        </div>
-    </header>
+# Let's inspect the files present in workspace to ensure we compile all models correctly
+df = pd.read_excel('New Microsoft Excel Worksheet.xlsx', header=None)
 
-    <div class="container mb-5">
-        
-        <!-- Controls Row -->
-        <div class="row g-3 mb-4 no-print">
-            <div class="col-md-5">
-                <div class="card card-custom p-3">
-                    <label for="categorySelect" class="form-label fw-bold text-secondary"><i class="bi bi-car-front-fill me-1"></i> 1. Select Model Category</label>
-                    <select id="categorySelect" class="form-select form-select-lg" onchange="onCategoryChange()">
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-5">
-                <div class="card card-custom p-3">
-                    <label for="variantSelect" class="form-label fw-bold text-secondary"><i class="bi bi-gear-wide-connected me-1"></i> 2. Select Variant</label>
-                    <select id="variantSelect" class="form-select form-select-lg" onchange="onVariantChange()">
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button class="btn btn-outline-primary btn-lg w-100 h-100" onclick="window.print()">
-                    <i class="bi bi-printer-fill me-1"></i> Print / Save PDF
-                </button>
-            </div>
-        </div>
+# Process Excel file database
+categories_db = {}
+current_cat = None
 
-        <!-- Main Display Content -->
-        <div class="row g-4">
-            
-            <!-- Price Calculation Breakdown -->
-            <div class="col-lg-7">
-                <div class="card card-custom p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                        <h4 class="fw-bold text-primary mb-0" id="selectedVariantTitle">Variant Price Breakdown</h4>
-                        <span class="badge bg-primary px-3 py-2" id="categoryBadge">Category</span>
-                    </div>
+for i in range(2, len(df)):
+    row = df.iloc[i].tolist()
+    name = str(row[0]).strip() if pd.notna(row[0]) else ''
+    if not name:
+        continue
+    if pd.isna(row[1]):
+        current_cat = name
+        if current_cat not in categories_db:
+            categories_db[current_cat] = []
+    else:
+        ex = float(row[1])
+        rto = float(row[2]) if pd.notna(row[2]) else 0
+        ins = float(row[3]) if pd.notna(row[3]) else 0
+        categories_db[current_cat].append({
+            "name": name,
+            "ex": ex,
+            "rto": rto,
+            "ins": ins
+        })
 
-                    <table class="table table-hover table-custom align-middle">
-                        <tbody>
-                            <tr>
-                                <td><i class="bi bi-tag-fill me-2 text-primary"></i> <strong>Ex-Showroom Price</strong></td>
-                                <td class="text-end fw-bold fs-5" id="valExShowroom">₹0</td>
-                            </tr>
-                            <tr>
-                                <td><i class="bi bi-file-earmark-text-fill me-2 text-secondary"></i> RTO Registration Charges (UP 53)</td>
-                                <td class="text-end text-dark" id="valRto">₹0</td>
-                            </tr>
-                            <tr>
-                                <td><i class="bi bi-shield-check me-2 text-success"></i> Zero Dep Insurance</td>
-                                <td class="text-end text-dark" id="valInsurance">₹0</td>
-                            </tr>
-                            <tr>
-                                <td><i class="bi bi-broadcast me-2 text-warning"></i> FASTag Charges</td>
-                                <td class="text-end text-dark" id="valFastag">₹600</td>
-                            </tr>
-                            <tr id="tcsRow" style="display: none;">
-                                <td><i class="bi bi-receipt me-2 text-danger"></i> 1% TCS (Applicable above ₹10 Lakhs)</td>
-                                <td class="text-end text-danger fw-bold" id="valTcs">₹0</td>
-                            </tr>
-                            <tr class="table-primary border-top border-3">
-                                <td class="fw-bold fs-4 text-primary">Total On-Road Price</td>
-                                <td class="text-end fw-bold fs-3 text-primary" id="valOnRoad">₹0</td>
-                            </tr>
-                        </tbody>
-                    </table>
+# Add Dzire / Tour S data from the Dzire image uploaded earlier
+categories_db["DAZZLING NEW DZIRE"] = [
+    {"name": "MARUTI DZIRE LXI 1.2L ISS 5MT", "ex": 630789, "rto": 59071, "ins": 43986},
+    {"name": "MARUTI DZIRE VXI 1.2L ISS 5MT", "ex": 727288, "rto": 67756, "ins": 48160},
+    {"name": "MARUTI DZIRE ZXI 1.2L ISS 5MT", "ex": 827888, "rto": 76810, "ins": 53752},
+    {"name": "MARUTI DZIRE ZXI+ 1.2L ISS 5MT", "ex": 896489, "rto": 82984, "ins": 55590},
+    {"name": "MARUTI DZIRE VXI 1.2L ISS AGS", "ex": 772289, "rto": 71806, "ins": 49130},
+    {"name": "MARUTI DZIRE ZXI 1.2L ISS AGS", "ex": 872889, "rto": 80860, "ins": 55633},
+    {"name": "MARUTI DZIRE ZXI+ 1.2L ISS AGS", "ex": 941488, "rto": 87034, "ins": 57567},
+    {"name": "MARUTI DZIRE VXI CNG 1.2L 5MT", "ex": 818289, "rto": 75946, "ins": 54826},
+    {"name": "MARUTI DZIRE ZXI CNG 1.2L 5MT", "ex": 918889, "rto": 85000, "ins": 57185},
+    {"name": "MARUTI TOUR S 1.2L ISS 5MT", "ex": 628988, "rto": 58909, "ins": 45500},
+    {"name": "MARUTI TOUR S CNG 1.2L 5MT", "ex": 724988, "rto": 67549, "ins": 51500},
+    {"name": "MARUTI DZIRE VXI ISS CNG 1.2L AGS", "ex": 853288, "rto": 79096, "ins": 56826},
+    {"name": "MARUTI DZIRE ZXI ISS CNG 1.2L AGS", "ex": 953889, "rto": 88150, "ins": 59185}
+]
 
-                    <div class="alert alert-light border mt-3 mb-0 text-muted small">
-                        <i class="bi bi-info-circle me-1"></i> Note: Prices are indicative and subject to change as per government norms & Maruti Suzuki guidelines. FASTag mandatory fee ₹600 is included.
-                    </div>
-                </div>
-            </div>
-
-            <!-- On-Road Estimator & Loan Calculator -->
-            <div class="col-lg-5">
-                <div class="card card-custom p-4 summary-card h-100">
-                    <h4 class="fw-bold text-dark mb-3"><i class="bi bi-calculator-fill me-2 text-primary"></i> EMI & Finance Estimator</h4>
-                    
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Down Payment (₹)</label>
-                        <input type="number" id="inputDownPayment" class="form-control form-control-lg" value="100000" step="10000" oninput="calculateEMI()">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Loan Interest Rate (% p.a.)</label>
-                        <input type="number" id="inputInterest" class="form-control" value="8.75" step="0.25" oninput="calculateEMI()">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Tenure (Years)</label>
-                        <select id="selectTenure" class="form-select" onchange="calculateEMI()">
-                            <option value="3">3 Years (36 Months)</option>
-                            <option value="5" selected>5 Years (60 Months)</option>
-                            <option value="7">7 Years (84 Months)</option>
-                        </select>
-                    </div>
-
-                    <hr>
-
-                    <div class="p-3 bg-white rounded shadow-sm">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span class="text-muted">Loan Amount:</span>
-                            <strong id="valLoanAmount">₹0</strong>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted">Estimated Monthly EMI:</span>
-                            <span class="price-tag text-success" id="valEMI">₹0</span>
-                        </div>
-                        <small class="text-muted d-block text-center">*Estimated based on reducing balance interest rate.</small>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Full Price List Table -->
-        <div class="row mt-5">
-            <div class="col-12">
-                <div class="card card-custom p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="fw-bold text-dark mb-0"><i class="bi bi-table me-2 text-primary"></i> Complete Price Directory</h4>
-                        <input type="text" id="tableSearch" class="form-control w-auto no-print" placeholder="Search variant or model..." onkeyup="filterTable()">
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle" id="fullPriceTable">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Model Variant</th>
-                                    <th>Ex-Showroom (₹)</th>
-                                    <th>RTO (UP 53) (₹)</th>
-                                    <th>Zero Dep Ins. (₹)</th>
-                                    <th>FASTag (₹)</th>
-                                    <th>Est. On-Road (₹)</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Embedded Database JSON -->
-    <script>
-        const vehicleData = """ + json.dumps(categories_db, indent=2) + """;
-
-        function init() {
-            const catSelect = document.getElementById('categorySelect');
-            catSelect.innerHTML = '';
-            for (let cat in vehicleData) {
-                let opt = document.createElement('option');
-                opt.value = cat;
-                opt.innerText = cat;
-                catSelect.appendChild(opt);
-            }
-            onCategoryChange();
-            renderFullTable();
-        }
-
-        function onCategoryChange() {
-            const catSelect = document.getElementById('categorySelect');
-            const varSelect = document.getElementById('variantSelect');
-            const cat = catSelect.value;
-            
-            varSelect.innerHTML = '';
-            vehicleData[cat].forEach((item, index) => {
-                let opt = document.createElement('option');
-                opt.value = index;
-                opt.innerText = item.name;
-                varSelect.appendChild(opt);
-            });
-            onVariantChange();
-        }
-
-        function onVariantChange() {
-            const cat = document.getElementById('categorySelect').value;
-            const varIdx = document.getElementById('variantSelect').value;
-            const item = vehicleData[cat][varIdx];
-
-            document.getElementById('selectedVariantTitle').innerText = item.name;
-            document.getElementById('categoryBadge').innerText = cat;
-
-            const ex = Math.round(item.ex);
-            const rto = Math.round(item.rto);
-            const ins = Math.round(item.ins);
-            const fastag = 600;
-            let tcs = 0;
-            if (ex > 1000000) {
-                tcs = Math.round(ex * 0.01);
-                document.getElementById('tcsRow').style.display = '';
-            } else {
-                document.getElementById('tcsRow').style.display = 'none';
-            }
-
-            const totalOnRoad = ex + rto + ins + fastag + tcs;
-
-            document.getElementById('valExShowroom').innerText = '₹' + ex.toLocaleString('en-IN');
-            document.getElementById('valRto').innerText = '₹' + rto.toLocaleString('en-IN');
-            document.getElementById('valInsurance').innerText = '₹' + ins.toLocaleString('en-IN');
-            document.getElementById('valFastag').innerText = '₹' + fastag.toLocaleString('en-IN');
-            document.getElementById('valTcs').innerText = '₹' + tcs.toLocaleString('en-IN');
-            document.getElementById('valOnRoad').innerText = '₹' + totalOnRoad.toLocaleString('en-IN');
-
-            calculateEMI();
-        }
-
-        function calculateEMI() {
-            const cat = document.getElementById('categorySelect').value;
-            const varIdx = document.getElementById('variantSelect').value;
-            const item = vehicleData[cat][varIdx];
-
-            const ex = Math.round(item.ex);
-            const rto = Math.round(item.rto);
-            const ins = Math.round(item.ins);
-            const fastag = 600;
-            let tcs = (ex > 1000000) ? Math.round(ex * 0.01) : 0;
-            const onRoad = ex + rto + ins + fastag + tcs;
-
-            let dp = parseFloat(document.getElementById('inputDownPayment').value) || 0;
-            if (dp > onRoad) dp = onRoad;
-            
-            let loan = onRoad - dp;
-            if (loan < 0) loan = 0;
-
-            document.getElementById('valLoanAmount').innerText = '₹' + loan.toLocaleString('en-IN');
-
-            let rate = parseFloat(document.getElementById('inputInterest').value) || 8.75;
-            let years = parseInt(document.getElementById('selectTenure').value) || 5;
-            let months = years * 12;
-            let r = rate / 12 / 100;
-
-            let emi = 0;
-            if (loan > 0 && r > 0) {
-                emi = Math.round((loan * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1));
-            }
-
-            document.getElementById('valEMI').innerText = '₹' + emi.toLocaleString('en-IN') + '/mo';
-        }
-
-        function renderFullTable() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-
-            for (let cat in vehicleData) {
-                vehicleData[cat].forEach(item => {
-                    const ex = Math.round(item.ex);
-                    const rto = Math.round(item.rto);
-                    const ins = Math.round(item.ins);
-                    const fastag = 600;
-                    const tcs = (ex > 1000000) ? Math.round(ex * 0.01) : 0;
-                    const onRoad = ex + rto + ins + fastag + tcs;
-
-                    let tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><span class="badge bg-secondary">\${cat}</span></td>
-                        <td class="fw-semibold">\${item.name}</td>
-                        <td>₹\${ex.toLocaleString('en-IN')}</td>
-                        <td>₹\${rto.toLocaleString('en-IN')}</td>
-                        <td>₹\${ins.toLocaleString('en-IN')}</td>
-                        <td>₹\${fastag.toLocaleString('en-IN')}</td>
-                        <td class="fw-bold text-primary">₹\${onRoad.toLocaleString('en-IN')}</td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            }
-        }
-
-        function filterTable() {
-            let filter = document.getElementById('tableSearch').value.toUpperCase();
-            let trs = document.getElementById('tableBody').getElementsByTagName('tr');
-            for (let i = 0; i < trs.length; i++) {
-                let txt = trs[i].innerText;
-                if (txt.toUpperCase().indexOf(filter) > -1) {
-                    trs[i].style.display = "";
-                } else {
-                    trs[i].style.display = "none";
-                }
-            }
-        }
-
-        window.onload = init;
-    </script>
-</body>
-</html>
-"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_code)
-
-print("index.html written successfully!")
+print("Total categories:", len(categories_db))
+for cat, items in categories_db.items():
+    print(f"- {cat}: {len(items)} variants")
