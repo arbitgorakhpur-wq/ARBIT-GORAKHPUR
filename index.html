@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maruti Suzuki ARENA Detailed Variant-Wise Price List</title>
+  <title>Maruti Suzuki ARENA - Dropdown Price List</title>
   <style>
     :root {
       --arena-red: #e31837;
@@ -30,7 +30,7 @@
 
     header h1 {
       margin: 0;
-      font-size: 28px;
+      font-size: 26px;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
@@ -42,9 +42,41 @@
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 900px;
       margin: 30px auto;
       padding: 0 15px;
+    }
+
+    /* Dropdown Section Styling */
+    .filter-box {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .filter-box label {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--arena-blue);
+      margin-right: 10px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .filter-box select {
+      padding: 10px 15px;
+      font-size: 15px;
+      border: 2px solid var(--arena-blue);
+      border-radius: 6px;
+      outline: none;
+      background-color: white;
+      color: var(--arena-blue);
+      font-weight: 600;
+      cursor: pointer;
+      min-width: 250px;
     }
 
     .table-responsive {
@@ -52,7 +84,6 @@
       background: white;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       border-radius: 8px;
-      margin-bottom: 30px;
     }
 
     table {
@@ -75,24 +106,24 @@
       font-size: 14px;
     }
 
-    /* Model Section Header */
-    .model-header {
+    /* Selected Model Banner */
+    .model-title-row {
       background-color: var(--arena-blue) !important;
       color: white;
       font-weight: bold;
       font-size: 16px;
     }
 
-    .model-header td {
+    .model-title-row td {
       border-bottom: none;
       padding: 12px 16px;
     }
 
-    tr:nth-child(even):not(.model-header) {
+    tr:nth-child(even):not(.model-title-row) {
       background-color: #f8fafc;
     }
 
-    tr:hover:not(.model-header) {
+    tr:hover:not(.model-title-row) {
       background-color: #f1f5f9;
     }
 
@@ -131,216 +162,140 @@
 
   <header>
     <h1>MARUTI SUZUKI ARENA</h1>
-    <p>Detailed Variant-Wise Ex-Showroom Price List</p>
+    <p>Select Model from Dropdown to View Price List</p>
   </header>
 
   <div class="container">
+    
+    <!-- DROPDOWN SELECTION -->
+    <div class="filter-box">
+      <label for="carModelSelect">Choose Car Model:</label>
+      <select id="carModelSelect" onchange="showCarPriceTable()">
+        <option value="brezza">Maruti Suzuki Brezza</option>
+        <option value="swift">Maruti Suzuki Swift</option>
+        <option value="dzire">Maruti Suzuki Dzire</option>
+        <option value="ertiga">Maruti Suzuki Ertiga</option>
+        <option value="wagonr">Maruti Suzuki Wagon R</option>
+        <option value="alto">Maruti Suzuki Alto K10</option>
+      </select>
+    </div>
+
+    <!-- TABLE DISPLAY AREA -->
     <div class="table-responsive">
       <table>
         <thead>
           <tr>
-            <th>Model & Variant</th>
+            <th>Variant Name</th>
             <th>Engine / Fuel Type</th>
             <th>Transmission</th>
             <th>Ex-Showroom Price (Approx)</th>
           </tr>
         </thead>
-        <tbody>
-
-          <!-- BREZZA -->
-          <tr class="model-header">
-            <td colspan="4">Maruti Suzuki Brezza (Compact SUV)</td>
-          </tr>
-          <tr>
-            <td>Brezza LXi</td>
-            <td>1.5L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 8,34,000</td>
-          </tr>
-          <tr>
-            <td>Brezza VXi</td>
-            <td>1.5L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 9,69,000</td>
-          </tr>
-          <tr>
-            <td>Brezza LXi <span class="badge-cng">CNG</span></td>
-            <td>1.5L Petrol + CNG</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 9,29,000</td>
-          </tr>
-          <tr>
-            <td>Brezza ZXi</td>
-            <td>1.5L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 11,09,000</td>
-          </tr>
-          <tr>
-            <td>Brezza VXi <span class="badge-amt">AT</span></td>
-            <td>1.5L Petrol</td>
-            <td>6-Speed Automatic</td>
-            <td class="price">₹ 11,14,000</td>
-          </tr>
-          <tr>
-            <td>Brezza ZXi+ Dual Tone</td>
-            <td>1.5L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 12,58,000</td>
-          </tr>
-
-          <!-- SWIFT -->
-          <tr class="model-header">
-            <td colspan="4">Maruti Suzuki Swift (Hatchback)</td>
-          </tr>
-          <tr>
-            <td>Swift LXi</td>
-            <td>1.2L Z-Series Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 6,49,000</td>
-          </tr>
-          <tr>
-            <td>Swift VXi</td>
-            <td>1.2L Z-Series Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 7,29,000</td>
-          </tr>
-          <tr>
-            <td>Swift VXi <span class="badge-amt">AMT</span></td>
-            <td>1.2L Z-Series Petrol</td>
-            <td>5-Speed AMT</td>
-            <td class="price">₹ 7,79,000</td>
-          </tr>
-          <tr>
-            <td>Swift VXi <span class="badge-cng">CNG</span></td>
-            <td>1.2L Petrol + CNG</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 8,19,000</td>
-          </tr>
-          <tr>
-            <td>Swift ZXi+ Dual Tone</td>
-            <td>1.2L Z-Series Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 9,14,000</td>
-          </tr>
-
-          <!-- DZIRE -->
-          <tr class="model-header">
-            <td colspan="4">Maruti Suzuki Dzire (Compact Sedan)</td>
-          </tr>
-          <tr>
-            <td>Dzire LXi</td>
-            <td>1.2L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 6,79,000</td>
-          </tr>
-          <tr>
-            <td>Dzire VXi</td>
-            <td>1.2L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 7,79,000</td>
-          </tr>
-          <tr>
-            <td>Dzire VXi <span class="badge-cng">CNG</span></td>
-            <td>1.2L Petrol + CNG</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 8,74,000</td>
-          </tr>
-          <tr>
-            <td>Dzire ZXi+ <span class="badge-amt">AMT</span></td>
-            <td>1.2L Petrol</td>
-            <td>5-Speed AMT</td>
-            <td class="price">₹ 10,14,000</td>
-          </tr>
-
-          <!-- ERTIGA -->
-          <tr class="model-header">
-            <td colspan="4">Maruti Suzuki Ertiga (7-Seater MPV)</td>
-          </tr>
-          <tr>
-            <td>Ertiga LXi (O)</td>
-            <td>1.5L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 8,69,000</td>
-          </tr>
-          <tr>
-            <td>Ertiga VXi (O)</td>
-            <td>1.5L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 9,83,000</td>
-          </tr>
-          <tr>
-            <td>Ertiga VXi (O) <span class="badge-cng">CNG</span></td>
-            <td>1.5L Petrol + CNG</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 10,78,000</td>
-          </tr>
-          <tr>
-            <td>Ertiga ZXi+ <span class="badge-amt">AT</span></td>
-            <td>1.5L Petrol</td>
-            <td>6-Speed Automatic</td>
-            <td class="price">₹ 13,03,000</td>
-          </tr>
-
-          <!-- WAGON R -->
-          <tr class="model-header">
-            <td colspan="4">Maruti Suzuki Wagon R (Tallboy Hatchback)</td>
-          </tr>
-          <tr>
-            <td>Wagon R LXi 1.0L</td>
-            <td>1.0L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 5,54,000</td>
-          </tr>
-          <tr>
-            <td>Wagon R LXi 1.0L <span class="badge-cng">CNG</span></td>
-            <td>1.0L Petrol + CNG</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 6,44,000</td>
-          </tr>
-          <tr>
-            <td>Wagon R ZXi 1.2L</td>
-            <td>1.2L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 6,28,000</td>
-          </tr>
-          <tr>
-            <td>Wagon R ZXi+ 1.2L Dual Tone <span class="badge-amt">AMT</span></td>
-            <td>1.2L Petrol</td>
-            <td>5-Speed AMT</td>
-            <td class="price">₹ 7,38,000</td>
-          </tr>
-
-          <!-- ALTO K10 -->
-          <tr class="model-header">
-            <td colspan="4">Maruti Suzuki Alto K10 (Entry Hatchback)</td>
-          </tr>
-          <tr>
-            <td>Alto K10 Std</td>
-            <td>1.0L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 3,99,000</td>
-          </tr>
-          <tr>
-            <td>Alto K10 VXi</td>
-            <td>1.0L Petrol</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 5,06,000</td>
-          </tr>
-          <tr>
-            <td>Alto K10 VXi <span class="badge-cng">CNG</span></td>
-            <td>1.0L Petrol + CNG</td>
-            <td>5-Speed Manual</td>
-            <td class="price">₹ 5,96,000</td>
-          </tr>
-
+        <tbody id="priceTableBody">
+          <!-- Dropdown Change par JavaScript ke dwara data yahan load hoga -->
         </tbody>
       </table>
     </div>
+
   </div>
 
   <footer>
-    <p>* Ex-showroom prices mentioned are indicative and subject to change. RTO, Insurance, and other charges will be extra.</p>
+    <p>* Ex-showroom prices mentioned are indicative and subject to change. RTO and Insurance extra.</p>
   </footer>
+
+  <!-- JAVASCRIPT FOR DROPDOWN FUNCTIONALITY -->
+  <script>
+    // Car Data Object
+    const carData = {
+      brezza: {
+        title: "Maruti Suzuki Brezza (Compact SUV)",
+        variants: [
+          { name: "Brezza LXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 8,34,000" },
+          { name: "Brezza VXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 9,69,000" },
+          { name: "Brezza LXi <span class='badge-cng'>CNG</span>", engine: "1.5L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 9,29,000" },
+          { name: "Brezza ZXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 11,09,000" },
+          { name: "Brezza VXi <span class='badge-amt'>AT</span>", engine: "1.5L Petrol", trans: "6-Speed Automatic", price: "₹ 11,14,000" },
+          { name: "Brezza ZXi+ Dual Tone", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 12,58,000" }
+        ]
+      },
+      swift: {
+        title: "Maruti Suzuki Swift (Hatchback)",
+        variants: [
+          { name: "Swift LXi", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", price: "₹ 6,49,000" },
+          { name: "Swift VXi", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", price: "₹ 7,29,000" },
+          { name: "Swift VXi <span class='badge-amt'>AMT</span>", engine: "1.2L Z-Series Petrol", trans: "5-Speed AMT", price: "₹ 7,79,000" },
+          { name: "Swift VXi <span class='badge-cng'>CNG</span>", engine: "1.2L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 8,19,000" },
+          { name: "Swift ZXi+ Dual Tone", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", price: "₹ 9,14,000" }
+        ]
+      },
+      dzire: {
+        title: "Maruti Suzuki Dzire (Compact Sedan)",
+        variants: [
+          { name: "Dzire LXi", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 6,79,000" },
+          { name: "Dzire VXi", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 7,79,000" },
+          { name: "Dzire VXi <span class='badge-cng'>CNG</span>", engine: "1.2L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 8,74,000" },
+          { name: "Dzire ZXi+ <span class='badge-amt'>AMT</span>", engine: "1.2L Petrol", trans: "5-Speed AMT", price: "₹ 10,14,000" }
+        ]
+      },
+      ertiga: {
+        title: "Maruti Suzuki Ertiga (7-Seater MPV)",
+        variants: [
+          { name: "Ertiga LXi (O)", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 8,69,000" },
+          { name: "Ertiga VXi (O)", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 9,83,000" },
+          { name: "Ertiga VXi (O) <span class='badge-cng'>CNG</span>", engine: "1.5L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 10,78,000" },
+          { name: "Ertiga ZXi+ <span class='badge-amt'>AT</span>", engine: "1.5L Petrol", trans: "6-Speed Automatic", price: "₹ 13,03,000" }
+        ]
+      },
+      wagonr: {
+        title: "Maruti Suzuki Wagon R (Tallboy Hatchback)",
+        variants: [
+          { name: "Wagon R LXi 1.0L", engine: "1.0L Petrol", trans: "5-Speed Manual", price: "₹ 5,54,000" },
+          { name: "Wagon R LXi 1.0L <span class='badge-cng'>CNG</span>", engine: "1.0L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 6,44,000" },
+          { name: "Wagon R ZXi 1.2L", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 6,28,000" },
+          { name: "Wagon R ZXi+ 1.2L Dual Tone <span class='badge-amt'>AMT</span>", engine: "1.2L Petrol", trans: "5-Speed AMT", price: "₹ 7,38,000" }
+        ]
+      },
+      alto: {
+        title: "Maruti Suzuki Alto K10 (Entry Hatchback)",
+        variants: [
+          { name: "Alto K10 Std", engine: "1.0L Petrol", trans: "5-Speed Manual", price: "₹ 3,99,000" },
+          { name: "Alto K10 VXi", engine: "1.0L Petrol", trans: "5-Speed Manual", price: "₹ 5,06,000" },
+          { name: "Alto K10 VXi <span class='badge-cng'>CNG</span>", engine: "1.0L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 5,96,000" }
+        ]
+      }
+    };
+
+    // Function to render table content based on selected dropdown value
+    function showCarPriceTable() {
+      const selectedModel = document.getElementById('carModelSelect').value;
+      const tableBody = document.getElementById('priceTableBody');
+      const selectedCarData = carData[selectedModel];
+
+      let htmlRows = `
+        <tr class="model-title-row">
+          <td colspan="4">${selectedCarData.title}</td>
+        </tr>
+      `;
+
+      selectedCarData.variants.forEach(variant => {
+        htmlRows += `
+          <tr>
+            <td>${variant.name}</td>
+            <td>${variant.engine}</td>
+            <td>${variant.trans}</td>
+            <td class="price">${variant.price}</td>
+          </tr>
+        `;
+      });
+
+      tableBody.innerHTML = htmlRows;
+    }
+
+    // Load Brezza details by default when page loads
+    window.onload = function() {
+      showCarPriceTable();
+    };
+  </script>
 
 </body>
 </html>
