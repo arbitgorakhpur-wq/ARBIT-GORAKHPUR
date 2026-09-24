@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maruti Suzuki ARENA - Drive Image Integrated Selector</title>
+  <title>Maruti Suzuki ARENA - Drive Image Fixed</title>
   <style>
     :root {
       --arena-red: #e31837;
@@ -24,14 +24,8 @@
       background-color: var(--arena-blue);
       color: white;
       text-align: center;
-      padding: 25px 15px;
+      padding: 20px 15px;
       border-bottom: 5px solid var(--arena-red);
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-      text-transform: uppercase;
     }
 
     .container {
@@ -128,7 +122,7 @@
 
   <header>
     <h1>MARUTI SUZUKI ARENA</h1>
-    <p>Google Drive Custom Image Selector</p>
+    <p>Select Model & Variant</p>
   </header>
 
   <div class="container">
@@ -154,7 +148,8 @@
 
     <div class="display-card">
       <div class="image-container">
-        <img id="carImage" src="" alt="Car Image Loading...">
+        <!-- Crossorigin set kiya gaya hai CORS issues ke liye -->
+        <img id="carImage" src="" alt="Loading Car Image..." crossorigin="anonymous">
       </div>
 
       <table class="details-table">
@@ -184,20 +179,14 @@
   </div>
 
   <script>
-    // Google Drive File IDs Helper Converter
-    function getDriveUrl(fileId) {
-      return `https://lh3.googleusercontent.com/d/${fileId}`;
-    }
-
-    // UPDATE HERE: Apne Drive Folder ki har image ki File ID yahan daalein
-    // Example: https://drive.google.com/file/d/1ABCXYZ.../view -> ID hai "1ABCXYZ..."
+    // Yahan apni images ki exact FILE IDs daliye:
     const driveImageIds = {
-      brezza: "1jifzTR3b3-M2S7OJc0Vn5aLPISpyzDMu", // Example folder ID or Replace with Brezza File ID
-      swift: "FILE_ID_HERE",
-      dzire: "FILE_ID_HERE",
-      ertiga: "FILE_ID_HERE",
-      wagonr: "FILE_ID_HERE",
-      alto: "FILE_ID_HERE"
+      brezza: "REPLACE_WITH_BREZZA_FILE_ID",
+      swift: "REPLACE_WITH_SWIFT_FILE_ID",
+      dzire: "REPLACE_WITH_DZIRE_FILE_ID",
+      ertiga: "REPLACE_WITH_ERTIGA_FILE_ID",
+      wagonr: "REPLACE_WITH_WAGONR_FILE_ID",
+      alto: "REPLACE_WITH_ALTO_FILE_ID"
     };
 
     const arenaCars = {
@@ -252,6 +241,11 @@
       }
     };
 
+    function getDirectDriveUrl(fileId) {
+      // Direct high-res viewable link format for Drive files
+      return `https://lh3.googleusercontent.com/d/${fileId}`;
+    }
+
     function onModelChange() {
       const selectedModelKey = document.getElementById('modelSelect').value;
       const car = arenaCars[selectedModelKey];
@@ -273,9 +267,16 @@
       const car = arenaCars[selectedModelKey];
       const selectedVariant = car.variants[variantIndex];
 
-      // Convert Drive ID to Viewable Image URL
-      document.getElementById('carImage').src = getDriveUrl(car.imageId);
-      document.getElementById('carImage').alt = car.title;
+      const imgElement = document.getElementById('carImage');
+      
+      // Drive Image URL set
+      if(car.imageId && !car.imageId.includes("REPLACE_WITH")) {
+        imgElement.src = getDirectDriveUrl(car.imageId);
+      } else {
+        imgElement.src = "https://via.placeholder.com/400x250?text=Please+Add+Drive+File+ID";
+      }
+
+      imgElement.alt = car.title;
 
       document.getElementById('resModel').innerText = car.title;
       document.getElementById('resVariant').innerText = selectedVariant.name;
