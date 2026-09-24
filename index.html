@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maruti Suzuki ARENA - Model & Variant Selector</title>
+  <title>Maruti Suzuki ARENA - Drive Image Integrated Selector</title>
   <style>
     :root {
       --arena-red: #e31837;
@@ -30,15 +30,8 @@
 
     header h1 {
       margin: 0;
-      font-size: 26px;
+      font-size: 24px;
       text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    header p {
-      margin: 8px 0 0 0;
-      font-size: 14px;
-      opacity: 0.8;
     }
 
     .container {
@@ -47,7 +40,6 @@
       padding: 0 15px;
     }
 
-    /* Dual Dropdown Controls */
     .filter-card {
       background: white;
       padding: 20px;
@@ -58,13 +50,11 @@
       flex-wrap: wrap;
       gap: 20px;
       justify-content: center;
-      align-items: center;
     }
 
     .filter-group {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
     }
 
     .filter-group label {
@@ -80,14 +70,10 @@
       border: 2px solid var(--arena-blue);
       border-radius: 6px;
       outline: none;
-      background-color: white;
-      color: var(--arena-blue);
-      font-weight: 600;
-      cursor: pointer;
       min-width: 220px;
+      font-weight: 600;
     }
 
-    /* Display Card */
     .display-card {
       background: white;
       border-radius: 10px;
@@ -102,21 +88,15 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 220px;
+      min-height: 250px;
     }
 
     .image-container img {
       max-width: 100%;
-      max-height: 240px;
+      max-height: 260px;
       object-fit: contain;
-      transition: transform 0.3s ease;
     }
 
-    .image-container img:hover {
-      transform: scale(1.03);
-    }
-
-    /* Detail Table */
     .details-table {
       width: 100%;
       border-collapse: collapse;
@@ -128,7 +108,6 @@
       color: white;
       padding: 12px 16px;
       font-size: 14px;
-      text-transform: uppercase;
       width: 35%;
     }
 
@@ -143,66 +122,48 @@
       font-weight: bold;
       color: #27ae60;
     }
-
-    footer {
-      text-align: center;
-      padding: 20px 15px;
-      font-size: 13px;
-      color: #666;
-    }
   </style>
 </head>
 <body>
 
   <header>
     <h1>MARUTI SUZUKI ARENA</h1>
-    <p>Select Model & Variant to View Instant Details</p>
+    <p>Google Drive Custom Image Selector</p>
   </header>
 
   <div class="container">
     
-    <!-- DUAL DROPDOWN SECTION -->
     <div class="filter-card">
-      
-      <!-- Model Dropdown -->
       <div class="filter-group">
-        <label for="modelSelect">1. Choose Car Model:</label>
+        <label for="modelSelect">1. Select Car Model:</label>
         <select id="modelSelect" onchange="onModelChange()">
-          <option value="brezza">Maruti Suzuki Brezza</option>
-          <option value="swift">Maruti Suzuki Swift</option>
-          <option value="dzire">Maruti Suzuki Dzire</option>
-          <option value="ertiga">Maruti Suzuki Ertiga</option>
-          <option value="wagonr">Maruti Suzuki Wagon R</option>
-          <option value="alto">Maruti Suzuki Alto K10</option>
+          <option value="brezza">Brezza</option>
+          <option value="swift">Swift</option>
+          <option value="dzire">Dzire</option>
+          <option value="ertiga">Ertiga</option>
+          <option value="wagonr">Wagon R</option>
+          <option value="alto">Alto K10</option>
         </select>
       </div>
 
-      <!-- Variant Dropdown -->
       <div class="filter-group">
-        <label for="variantSelect">2. Choose Variant:</label>
-        <select id="variantSelect" onchange="onVariantChange()">
-          <!-- JavaScript se dynamic options load honge -->
-        </select>
+        <label for="variantSelect">2. Select Variant:</label>
+        <select id="variantSelect" onchange="onVariantChange()"></select>
       </div>
-
     </div>
 
-    <!-- CAR DISPLAY CARD -->
     <div class="display-card">
-      
-      <!-- IMAGE -->
       <div class="image-container">
-        <img id="carImage" src="" alt="Car Image">
+        <img id="carImage" src="" alt="Car Image Loading...">
       </div>
 
-      <!-- DETAILS TABLE -->
       <table class="details-table">
         <tr>
-          <th>Selected Model</th>
+          <th>Model</th>
           <td id="resModel" style="font-weight: bold; color: var(--arena-blue);">-</td>
         </tr>
         <tr>
-          <th>Selected Variant</th>
+          <th>Variant</th>
           <td id="resVariant">-</td>
         </tr>
         <tr>
@@ -218,101 +179,93 @@
           <td id="resPrice" class="price-highlight">-</td>
         </tr>
       </table>
-
     </div>
 
   </div>
 
-  <footer>
-    <p>* Ex-showroom prices mentioned are indicative. Please check with your authorized Arena dealer for exact on-road price.</p>
-  </footer>
-
-  <!-- JAVASCRIPT FOR DUAL DROPDOWN LOGIC -->
   <script>
-    // Data Object
+    // Google Drive File IDs Helper Converter
+    function getDriveUrl(fileId) {
+      return `https://lh3.googleusercontent.com/d/${fileId}`;
+    }
+
+    // UPDATE HERE: Apne Drive Folder ki har image ki File ID yahan daalein
+    // Example: https://drive.google.com/file/d/1ABCXYZ.../view -> ID hai "1ABCXYZ..."
+    const driveImageIds = {
+      brezza: "1jifzTR3b3-M2S7OJc0Vn5aLPISpyzDMu", // Example folder ID or Replace with Brezza File ID
+      swift: "FILE_ID_HERE",
+      dzire: "FILE_ID_HERE",
+      ertiga: "FILE_ID_HERE",
+      wagonr: "FILE_ID_HERE",
+      alto: "FILE_ID_HERE"
+    };
+
     const arenaCars = {
       brezza: {
         title: "Maruti Suzuki Brezza",
-        imageUrl: "https://images.firstpost.com/uploads/2022/06/Maruti-Suzuki-Brezza.jpg",
+        imageId: driveImageIds.brezza,
         variants: [
-          { id: "b_lxi", name: "Brezza LXi", engine: "1.5L Smart Hybrid Petrol", trans: "5-Speed Manual", price: "₹ 8,34,000" },
-          { id: "b_vxi", name: "Brezza VXi", engine: "1.5L Smart Hybrid Petrol", trans: "5-Speed Manual", price: "₹ 9,69,000" },
-          { id: "b_lxi_cng", name: "Brezza LXi CNG", engine: "1.5L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 9,29,000" },
-          { id: "b_zxi", name: "Brezza ZXi", engine: "1.5L Smart Hybrid Petrol", trans: "5-Speed Manual", price: "₹ 11,09,000" },
-          { id: "b_vxi_at", name: "Brezza VXi AT", engine: "1.5L Smart Hybrid Petrol", trans: "6-Speed Automatic", price: "₹ 11,14,000" },
-          { id: "b_zxi_plus", name: "Brezza ZXi+ Dual Tone", engine: "1.5L Smart Hybrid Petrol", trans: "5-Speed Manual", price: "₹ 12,58,000" }
+          { name: "Brezza LXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 8,34,000" },
+          { name: "Brezza VXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 9,69,000" },
+          { name: "Brezza ZXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 11,09,000" }
         ]
       },
       swift: {
         title: "Maruti Suzuki Swift",
-        imageUrl: "https://images.carandbike.com/car-images/large/maruti-suzuki/swift/maruti-suzuki-swift.jpg",
+        imageId: driveImageIds.swift,
         variants: [
-          { id: "s_lxi", name: "Swift LXi", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", price: "₹ 6,49,000" },
-          { id: "s_vxi", name: "Swift VXi", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", price: "₹ 7,29,000" },
-          { id: "s_vxi_amt", name: "Swift VXi AMT", engine: "1.2L Z-Series Petrol", trans: "5-Speed AMT", price: "₹ 7,79,000" },
-          { id: "s_vxi_cng", name: "Swift VXi CNG", engine: "1.2L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 8,19,000" },
-          { id: "s_zxi_plus", name: "Swift ZXi+ Dual Tone", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", price: "₹ 9,14,000" }
+          { name: "Swift LXi", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 6,49,000" },
+          { name: "Swift VXi", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 7,29,000" }
         ]
       },
       dzire: {
         title: "Maruti Suzuki Dzire",
-        imageUrl: "https://imgd.aeplcdn.com/664x374/n/cw/ec/45691/dzire-exterior-right-front-three-quarter-3.jpeg",
+        imageId: driveImageIds.dzire,
         variants: [
-          { id: "d_lxi", name: "Dzire LXi", engine: "1.2L DualJet Petrol", trans: "5-Speed Manual", price: "₹ 6,79,000" },
-          { id: "d_vxi", name: "Dzire VXi", engine: "1.2L DualJet Petrol", trans: "5-Speed Manual", price: "₹ 7,79,000" },
-          { id: "d_vxi_cng", name: "Dzire VXi CNG", engine: "1.2L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 8,74,000" },
-          { id: "d_zxi_amt", name: "Dzire ZXi+ AMT", engine: "1.2L DualJet Petrol", trans: "5-Speed AMT", price: "₹ 10,14,000" }
+          { name: "Dzire LXi", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 6,79,000" },
+          { name: "Dzire VXi", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 7,79,000" }
         ]
       },
       ertiga: {
         title: "Maruti Suzuki Ertiga",
-        imageUrl: "https://imgd.aeplcdn.com/664x374/n/cw/ec/115871/ertiga-exterior-right-front-three-quarter.jpeg",
+        imageId: driveImageIds.ertiga,
         variants: [
-          { id: "e_lxi", name: "Ertiga LXi (O)", engine: "1.5L K15C Petrol", trans: "5-Speed Manual", price: "₹ 8,69,000" },
-          { id: "e_vxi", name: "Ertiga VXi (O)", engine: "1.5L K15C Petrol", trans: "5-Speed Manual", price: "₹ 9,83,000" },
-          { id: "e_vxi_cng", name: "Ertiga VXi (O) CNG", engine: "1.5L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 10,78,000" },
-          { id: "e_zxi_at", name: "Ertiga ZXi+ AT", engine: "1.5L K15C Petrol", trans: "6-Speed Automatic", price: "₹ 13,03,000" }
+          { name: "Ertiga LXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 8,69,000" },
+          { name: "Ertiga VXi", engine: "1.5L Petrol", trans: "5-Speed Manual", price: "₹ 9,83,000" }
         ]
       },
       wagonr: {
         title: "Maruti Suzuki Wagon R",
-        imageUrl: "https://imgd.aeplcdn.com/664x374/n/cw/ec/112947/wagon-r-exterior-right-front-three-quarter.jpeg",
+        imageId: driveImageIds.wagonr,
         variants: [
-          { id: "w_lxi_1", name: "Wagon R LXi 1.0L", engine: "1.0L K-Series Petrol", trans: "5-Speed Manual", price: "₹ 5,54,000" },
-          { id: "w_lxi_cng", name: "Wagon R LXi 1.0L CNG", engine: "1.0L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 6,44,000" },
-          { id: "w_zxi_12", name: "Wagon R ZXi 1.2L", engine: "1.2L K-Series Petrol", trans: "5-Speed Manual", price: "₹ 6,28,000" },
-          { id: "w_zxi_amt", name: "Wagon R ZXi+ 1.2L AMT", engine: "1.2L K-Series Petrol", trans: "5-Speed AMT", price: "₹ 7,38,000" }
+          { name: "Wagon R LXi 1.0L", engine: "1.0L Petrol", trans: "5-Speed Manual", price: "₹ 5,54,000" },
+          { name: "Wagon R ZXi 1.2L", engine: "1.2L Petrol", trans: "5-Speed Manual", price: "₹ 6,28,000" }
         ]
       },
       alto: {
         title: "Maruti Suzuki Alto K10",
-        imageUrl: "https://imgd.aeplcdn.com/664x374/n/cw/ec/125253/alto-k10-exterior-right-front-three-quarter.jpeg",
+        imageId: driveImageIds.alto,
         variants: [
-          { id: "a_std", name: "Alto K10 Std", engine: "1.0L DualJet Petrol", trans: "5-Speed Manual", price: "₹ 3,99,000" },
-          { id: "a_vxi", name: "Alto K10 VXi", engine: "1.0L DualJet Petrol", trans: "5-Speed Manual", price: "₹ 5,06,000" },
-          { id: "a_vxi_cng", name: "Alto K10 VXi CNG", engine: "1.0L Petrol + CNG", trans: "5-Speed Manual", price: "₹ 5,96,000" }
+          { name: "Alto K10 Std", engine: "1.0L Petrol", trans: "5-Speed Manual", price: "₹ 3,99,000" },
+          { name: "Alto K10 VXi", engine: "1.0L Petrol", trans: "5-Speed Manual", price: "₹ 5,06,000" }
         ]
       }
     };
 
-    // Model badalne par Variants dropdown refresh karne ka function
     function onModelChange() {
       const selectedModelKey = document.getElementById('modelSelect').value;
       const car = arenaCars[selectedModelKey];
       const variantSelect = document.getElementById('variantSelect');
 
-      // Variant Dropdown Options populate karein
       let optionsHtml = '';
       car.variants.forEach((v, index) => {
         optionsHtml += `<option value="${index}">${v.name}</option>`;
       });
       variantSelect.innerHTML = optionsHtml;
 
-      // Details update karein
       onVariantChange();
     }
 
-    // Variant badalne par UI updates
     function onVariantChange() {
       const selectedModelKey = document.getElementById('modelSelect').value;
       const variantIndex = document.getElementById('variantSelect').value;
@@ -320,11 +273,10 @@
       const car = arenaCars[selectedModelKey];
       const selectedVariant = car.variants[variantIndex];
 
-      // Image set karein
-      document.getElementById('carImage').src = car.imageUrl;
+      // Convert Drive ID to Viewable Image URL
+      document.getElementById('carImage').src = getDriveUrl(car.imageId);
       document.getElementById('carImage').alt = car.title;
 
-      // Fields update karein
       document.getElementById('resModel').innerText = car.title;
       document.getElementById('resVariant').innerText = selectedVariant.name;
       document.getElementById('resEngine').innerText = selectedVariant.engine;
@@ -332,11 +284,9 @@
       document.getElementById('resPrice').innerText = selectedVariant.price;
     }
 
-    // Default Initialization
     window.onload = function() {
       onModelChange();
     };
   </script>
-
 </body>
 </html>
