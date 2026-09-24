@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maruti Suzuki ARENA - Interactive On-Road Price Estimator</title>
+  <title>Arbit Automobiles Pvt. Ltd. - On-Road Price Estimator</title>
   <style>
     :root {
       --arena-red: #e31837;
@@ -30,14 +30,24 @@
 
     header h1 {
       margin: 0;
-      font-size: 24px;
+      font-size: 22px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     header p {
-      margin: 5px 0 0;
+      margin: 6px 0 0;
       font-size: 14px;
       opacity: 0.9;
+    }
+
+    .dealer-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-top: 8px;
+      font-size: 13px;
     }
 
     .container {
@@ -76,7 +86,7 @@
       border: 2px solid var(--arena-blue);
       border-radius: 6px;
       outline: none;
-      min-width: 220px;
+      min-width: 240px;
       font-weight: 600;
       background-color: white;
       color: var(--arena-blue);
@@ -88,7 +98,6 @@
       border-radius: 10px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.08);
       overflow: hidden;
-      text-align: center;
     }
 
     .image-container {
@@ -97,12 +106,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 240px;
+      min-height: 220px;
     }
 
     .image-container img {
       max-width: 100%;
-      max-height: 250px;
+      max-height: 240px;
       object-fit: contain;
     }
 
@@ -117,7 +126,7 @@
       color: white;
       padding: 12px 16px;
       font-size: 14px;
-      width: 35%;
+      width: 40%;
     }
 
     .details-table td {
@@ -127,7 +136,7 @@
     }
 
     .discount-input {
-      width: 120px;
+      width: 130px;
       padding: 6px 10px;
       font-size: 15px;
       font-weight: bold;
@@ -154,8 +163,9 @@
 <body>
 
   <header>
-    <h1>MARUTI SUZUKI ARENA</h1>
-    <p>Model & Variant Price Breakup (Editable Discount & Live On-Road Price)</p>
+    <h1>Arbit Automobiles Pvt. Ltd.</h1>
+    <p>Falmandi, Transport Nagar, Gorakhpur</p>
+    <div class="dealer-badge">MARUTI SUZUKI ARENA - Price Breakup Estimator</div>
   </header>
 
   <div class="container">
@@ -163,13 +173,13 @@
     <!-- DROPDOWNS -->
     <div class="filter-card">
       <div class="filter-group">
-        <label for="modelSelect">1. Select Car Model:</label>
+        <label for="modelSelect">1. Select Model Category:</label>
         <select id="modelSelect" onchange="onModelChange()">
-          <option value="victoria">Maruti Suzuki Victoris</option>
+          <option value="dzire">Dazzling New Dzire / Tour S</option>
           <option value="spresso">S-Presso</option>
           <option value="brezza">Brezza</option>
           <option value="swift">Swift</option>
-          <option value="dzire">Dzire</option>
+          <option value="victoria">Victoris</option>
           <option value="ertiga">Ertiga</option>
           <option value="wagonr">Wagon R</option>
           <option value="alto">Alto K10</option>
@@ -190,36 +200,32 @@
 
       <table class="details-table">
         <tr>
-          <th>Model</th>
-          <td id="resModel" style="font-weight: bold; color: var(--arena-blue);">-</td>
+          <th>Dealer Name</th>
+          <td style="font-weight: bold; color: var(--arena-blue);">Arbit Automobiles Pvt. Ltd.</td>
         </tr>
         <tr>
-          <th>Variant</th>
-          <td id="resVariant">-</td>
-        </tr>
-        <tr>
-          <th>Engine / Fuel</th>
-          <td id="resEngine">-</td>
-        </tr>
-        <tr>
-          <th>Transmission</th>
-          <td id="resTrans">-</td>
+          <th>Model Name</th>
+          <td id="resModel" style="font-weight: bold;">-</td>
         </tr>
         <tr>
           <th>Ex-Showroom Price</th>
           <td id="resExShowroom">-</td>
         </tr>
         <tr>
-          <th>RTO Charges</th>
+          <th>RTO UP 53</th>
           <td id="resRTO">-</td>
         </tr>
         <tr>
-          <th>Insurance</th>
+          <th>Zero Dep Insurance</th>
           <td id="resInsurance">-</td>
         </tr>
         <tr>
-          <th>Extended Warranty (EW)</th>
-          <td id="resEW">-</td>
+          <th>FASTag</th>
+          <td id="resFASTag">-</td>
+        </tr>
+        <tr>
+          <th>1 % TCS</th>
+          <td id="resTCS">-</td>
         </tr>
         <tr>
           <th>Discount / Offer (Editable)</th>
@@ -237,103 +243,106 @@
   </div>
 
   <footer>
-    <p>* Change discount amount to instantly calculate custom On-Road price.</p>
+    <p>* Arbit Automobiles Pvt. Ltd., Transport Nagar, Gorakhpur. Prices subject to state RTO updates & dealer offers.</p>
   </footer>
 
   <script>
-    // Drive File IDs ko yahan paste karein:
+    // Drive File IDs:
     const driveImageIds = {
+      dzire: "1oFlLDwJD7O8CCqDKSKjHReaJfXs_WED0", // <--- Aapki Dzire ID
       victoria: "REPLACE_WITH_VICTORIA_FILE_ID",
       spresso: "REPLACE_WITH_SPRESSO_FILE_ID",
       brezza: "REPLACE_WITH_BREZZA_FILE_ID",
       swift: "REPLACE_WITH_SWIFT_FILE_ID",
-      dzire: "REPLACE_WITH_DZIRE_FILE_ID",
       ertiga: "REPLACE_WITH_ERTIGA_FILE_ID",
       wagonr: "REPLACE_WITH_WAGONR_FILE_ID",
       alto: "REPLACE_WITH_ALTO_FILE_ID"
     };
 
-    // Current price breakup variables
     let currentExShowroom = 0;
     let currentRTO = 0;
     let currentInsurance = 0;
-    let currentEW = 0;
+    let currentFASTag = 0;
+    let currentTCS = 0;
 
     const arenaCars = {
-      victoria: {
-        title: "Maruti Suzuki Victoris",
-        imageId: driveImageIds.victoria,
+      dzire: {
+        title: "Dazzling New Dzire",
+        imageId: driveImageIds.dzire,
         variants: [
-          { name: "Victoris LXi", engine: "1.2L Petrol", trans: "5-Speed Manual", exShowroom: 650000, rto: 52000, insurance: 28000, ew: 10000, defaultDiscount: 10000 },
-          { name: "Victoris VXi", engine: "1.2L Petrol", trans: "5-Speed Manual", exShowroom: 740000, rto: 59000, insurance: 32000, ew: 11000, defaultDiscount: 15000 },
-          { name: "Victoris ZXi", engine: "1.2L Petrol", trans: "5-Speed Manual", exShowroom: 830000, rto: 66000, insurance: 36000, ew: 12000, defaultDiscount: 15000 },
-          { name: "Victoris VXi CNG", engine: "1.2L Petrol + CNG", trans: "5-Speed Manual", exShowroom: 820000, rto: 65000, insurance: 35000, ew: 12000, defaultDiscount: 10000 }
+          { name: "MARUTI DZIRE LXI 1.2L ISS 5MT", exShowroom: 630788.71, rto: 59070.98, insurance: 43986, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE VXI 1.2L ISS 5MT", exShowroom: 727288.36, rto: 67755.95, insurance: 48160, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE ZXI 1.2L ISS 5MT", exShowroom: 827888.42, rto: 76809.96, insurance: 53752, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE ZXI+ 1.2L ISS 5MT", exShowroom: 896488.90, rto: 82984.00, insurance: 55590, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE VXI 1.2L ISS AGS", exShowroom: 772288.84, rto: 71806.00, insurance: 49130, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE ZXI 1.2L ISS AGS", exShowroom: 872888.90, rto: 80860.00, insurance: 55633, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE ZXI+ 1.2L ISS AGS", exShowroom: 941488.20, rto: 87033.94, insurance: 57567, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE VXI CNG 1.2L 5MT", exShowroom: 818288.78, rto: 75945.99, insurance: 54826, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE ZXI CNG 1.2L 5MT", exShowroom: 918888.84, rto: 85000.00, insurance: 57185, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI TOUR S 1.2L ISS 5MT", exShowroom: 628988.03, rto: 58908.92, insurance: 45500, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI TOUR S CNG 1.2L 5MT", exShowroom: 724988.11, rto: 67548.93, insurance: 51500, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE VXI ISS CNG 1.2L AGS", exShowroom: 853288.49, rto: 79095.96, insurance: 56826, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "MARUTI DZIRE ZXI ISS CNG 1.2L AGS", exShowroom: 953888.50, rto: 88149.96, insurance: 59185, fastag: 600, tcs: 0, defaultDiscount: 0 }
         ]
       },
       spresso: {
         title: "Maruti Suzuki S-Presso",
         imageId: driveImageIds.spresso,
         variants: [
-          { name: "S-Presso Std", engine: "1.0L K10C Petrol", trans: "5-Speed Manual", exShowroom: 426000, rto: 34000, insurance: 22000, ew: 8500, defaultDiscount: 15000 },
-          { name: "S-Presso LXi", engine: "1.0L K10C Petrol", trans: "5-Speed Manual", exShowroom: 501500, rto: 40000, insurance: 25000, ew: 9000, defaultDiscount: 15000 },
-          { name: "S-Presso VXi", engine: "1.0L K10C Petrol", trans: "5-Speed Manual", exShowroom: 521500, rto: 41500, insurance: 26000, ew: 9000, defaultDiscount: 20000 },
-          { name: "S-Presso VXi CNG", engine: "1.0L Petrol + CNG", trans: "5-Speed Manual", exShowroom: 611500, rto: 49000, insurance: 29000, ew: 9500, defaultDiscount: 10000 },
-          { name: "S-Presso VXi+ AGS (AMT)", engine: "1.0L K10C Petrol", trans: "5-Speed Auto (AGS)", exShowroom: 585000, rto: 47000, insurance: 28000, ew: 9500, defaultDiscount: 20000 }
+          { name: "S-Presso Std", exShowroom: 426000, rto: 34000, insurance: 22000, fastag: 600, tcs: 0, defaultDiscount: 15000 },
+          { name: "S-Presso VXi", exShowroom: 521500, rto: 41500, insurance: 26000, fastag: 600, tcs: 0, defaultDiscount: 20000 }
         ]
       },
       brezza: {
         title: "Maruti Suzuki Brezza",
         imageId: driveImageIds.brezza,
         variants: [
-          { name: "Brezza LXi", engine: "1.5L Petrol", trans: "5-Speed Manual", exShowroom: 834000, rto: 66700, insurance: 38000, ew: 14000, defaultDiscount: 10000 },
-          { name: "Brezza VXi", engine: "1.5L Petrol", trans: "5-Speed Manual", exShowroom: 969000, rto: 77500, insurance: 42000, ew: 15000, defaultDiscount: 15000 },
-          { name: "Brezza ZXi", engine: "1.5L Petrol", trans: "5-Speed Manual", exShowroom: 1109000, rto: 88700, insurance: 47000, ew: 16500, defaultDiscount: 15000 }
+          { name: "Brezza LXi", exShowroom: 834000, rto: 66700, insurance: 38000, fastag: 600, tcs: 0, defaultDiscount: 10000 },
+          { name: "Brezza VXi", exShowroom: 969000, rto: 77500, insurance: 42000, fastag: 600, tcs: 0, defaultDiscount: 15000 }
         ]
       },
       swift: {
         title: "Maruti Suzuki Swift",
         imageId: driveImageIds.swift,
         variants: [
-          { name: "Swift LXi", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", exShowroom: 649000, rto: 51900, insurance: 30000, ew: 11000, defaultDiscount: 20000 },
-          { name: "Swift VXi", engine: "1.2L Z-Series Petrol", trans: "5-Speed Manual", exShowroom: 729000, rto: 58300, insurance: 33000, ew: 12000, defaultDiscount: 20000 }
+          { name: "Swift LXi", exShowroom: 649000, rto: 51900, insurance: 30000, fastag: 600, tcs: 0, defaultDiscount: 20000 },
+          { name: "Swift VXi", exShowroom: 729000, rto: 58300, insurance: 33000, fastag: 600, tcs: 0, defaultDiscount: 20000 }
         ]
       },
-      dzire: {
-        title: "Maruti Suzuki Dzire",
-        imageId: driveImageIds.dzire,
+      victoria: {
+        title: "Maruti Suzuki Victoris",
+        imageId: driveImageIds.victoria,
         variants: [
-          { name: "Dzire LXi", engine: "1.2L Petrol", trans: "5-Speed Manual", exShowroom: 679000, rto: 54300, insurance: 31000, ew: 11500, defaultDiscount: 15000 },
-          { name: "Dzire VXi", engine: "1.2L Petrol", trans: "5-Speed Manual", exShowroom: 779000, rto: 62300, insurance: 35000, ew: 12500, defaultDiscount: 15000 }
+          { name: "Victoris LXi", exShowroom: 650000, rto: 52000, insurance: 28000, fastag: 600, tcs: 0, defaultDiscount: 10000 },
+          { name: "Victoris VXi", exShowroom: 740000, rto: 59000, insurance: 32000, fastag: 600, tcs: 0, defaultDiscount: 15000 }
         ]
       },
       ertiga: {
         title: "Maruti Suzuki Ertiga",
         imageId: driveImageIds.ertiga,
         variants: [
-          { name: "Ertiga LXi", engine: "1.5L Petrol", trans: "5-Speed Manual", exShowroom: 869000, rto: 69500, insurance: 39000, ew: 14500, defaultDiscount: 0 },
-          { name: "Ertiga VXi", engine: "1.5L Petrol", trans: "5-Speed Manual", exShowroom: 983000, rto: 78600, insurance: 43000, ew: 15500, defaultDiscount: 0 }
+          { name: "Ertiga LXi", exShowroom: 869000, rto: 69500, insurance: 39000, fastag: 600, tcs: 0, defaultDiscount: 0 },
+          { name: "Ertiga VXi", exShowroom: 983000, rto: 78600, insurance: 43000, fastag: 600, tcs: 0, defaultDiscount: 0 }
         ]
       },
       wagonr: {
         title: "Maruti Suzuki Wagon R",
         imageId: driveImageIds.wagonr,
         variants: [
-          { name: "Wagon R LXi 1.0L", engine: "1.0L Petrol", trans: "5-Speed Manual", exShowroom: 554000, rto: 44300, insurance: 27000, ew: 10000, defaultDiscount: 25000 },
-          { name: "Wagon R ZXi 1.2L", engine: "1.2L Petrol", trans: "5-Speed Manual", exShowroom: 628000, rto: 50200, insurance: 29500, ew: 10800, defaultDiscount: 25000 }
+          { name: "Wagon R LXi 1.0L", exShowroom: 554000, rto: 44300, insurance: 27000, fastag: 600, tcs: 0, defaultDiscount: 25000 }
         ]
       },
       alto: {
         title: "Maruti Suzuki Alto K10",
         imageId: driveImageIds.alto,
         variants: [
-          { name: "Alto K10 Std", engine: "1.0L Petrol", trans: "5-Speed Manual", exShowroom: 399000, rto: 31900, insurance: 21000, ew: 8000, defaultDiscount: 15000 },
-          { name: "Alto K10 VXi", engine: "1.0L Petrol", trans: "5-Speed Manual", exShowroom: 506000, rto: 40400, insurance: 25000, ew: 9000, defaultDiscount: 20000 }
+          { name: "Alto K10 Std", exShowroom: 399000, rto: 31900, insurance: 21000, fastag: 600, tcs: 0, defaultDiscount: 15000 }
         ]
       }
     };
 
     function formatCurrency(amount) {
-      return "₹ " + (amount || 0).toLocaleString('en-IN');
+      return "₹ " + (amount || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
     }
 
     function getDirectDriveUrl(fileId) {
@@ -363,7 +372,6 @@
 
       const imgElement = document.getElementById('carImage');
       
-      // Image Set
       if(car.imageId && !car.imageId.includes("REPLACE_WITH")) {
         imgElement.src = getDirectDriveUrl(car.imageId);
       } else {
@@ -372,35 +380,28 @@
 
       imgElement.alt = car.title;
 
-      // Price Breakup Values
       currentExShowroom = selectedVariant.exShowroom;
       currentRTO = selectedVariant.rto;
       currentInsurance = selectedVariant.insurance;
-      currentEW = selectedVariant.ew;
+      currentFASTag = selectedVariant.fastag || 0;
+      currentTCS = selectedVariant.tcs || 0;
 
-      // UI Update
-      document.getElementById('resModel').innerText = car.title;
-      document.getElementById('resVariant').innerText = selectedVariant.name;
-      document.getElementById('resEngine').innerText = selectedVariant.engine;
-      document.getElementById('resTrans').innerText = selectedVariant.trans;
-      
+      document.getElementById('resModel').innerText = selectedVariant.name;
       document.getElementById('resExShowroom').innerText = formatCurrency(currentExShowroom);
       document.getElementById('resRTO').innerText = formatCurrency(currentRTO);
       document.getElementById('resInsurance').innerText = formatCurrency(currentInsurance);
-      document.getElementById('resEW').innerText = formatCurrency(currentEW);
+      document.getElementById('resFASTag').innerText = formatCurrency(currentFASTag);
+      document.getElementById('resTCS').innerText = currentTCS ? formatCurrency(currentTCS) : "N/A";
       
-      // Default Discount Set
       document.getElementById('discountInput').value = selectedVariant.defaultDiscount;
 
-      // Calculate On-Road Price
       calculateOnRoadPrice();
     }
 
-    // Live On-Road Price Calculation Function
     function calculateOnRoadPrice() {
       let userDiscount = parseFloat(document.getElementById('discountInput').value) || 0;
       
-      let finalOnRoad = (currentExShowroom + currentRTO + currentInsurance + currentEW) - userDiscount;
+      let finalOnRoad = (currentExShowroom + currentRTO + currentInsurance + currentFASTag + currentTCS) - userDiscount;
 
       document.getElementById('resOnRoad').innerText = formatCurrency(finalOnRoad);
     }
