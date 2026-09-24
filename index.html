@@ -1,12 +1,14 @@
-# Let's generate a complete standalone HTML web app containing all 149 variants across all 10 Maruti Suzuki model families
-html_code = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arbit Automobiles Pvt. Ltd. - Price Quotation & On-Road Estimator</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
     <style>
         :root {
             --primary-blue: #0d47a1;
@@ -31,8 +33,8 @@ html_code = """<!DOCTYPE html>
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 30px;
-            padding: 5px 18px;
-            font-size: 0.9rem;
+            padding: 6px 20px;
+            font-size: 0.95rem;
             display: inline-block;
         }
         .card-custom {
@@ -78,9 +80,13 @@ html_code = """<!DOCTYPE html>
     <!-- Header Banner -->
     <header class="header-banner text-center mb-4">
         <div class="container">
-            <div class="dealer-badge mb-2"><i class="bi bi-geo-alt-fill me-1"></i> Falmandi, Transport Nagar, Gorakhpur (UP 53)</div>
-            <h1 class="fw-bold display-5 mb-1">ARBIT AUTOMOBILES PVT. LTD.</h1>
-            <p class="lead mb-0 text-white-50">Authorized Dealer - Maruti Suzuki Arena & Commercial</p>
+            <!-- Dealer Name FIRST -->
+            <h1 class="fw-bold display-5 mb-1 text-uppercase tracking-wide">ARBIT AUTOMOBILES PVT. LTD.</h1>
+            <!-- Address SECOND -->
+            <div class="dealer-badge mt-2 mb-2">
+                <i class="bi bi-geo-alt-fill me-1 text-warning"></i> Falmandi, Transport Nagar, Gorakhpur (UP 53)
+            </div>
+            <p class="lead mb-0 text-white-50 small mt-1">Authorized Dealer - Maruti Suzuki Arena & Commercial</p>
         </div>
     </header>
 
@@ -104,7 +110,7 @@ html_code = """<!DOCTYPE html>
             </div>
             <div class="col-md-2 d-flex align-items-end">
                 <button class="btn btn-outline-primary btn-lg w-100 h-100" onclick="window.print()">
-                    <i class="bi bi-printer-fill me-1"></i> Print / Save PDF
+                    <i class="bi bi-printer-fill me-1"></i> Print / PDF
                 </button>
             </div>
         </div>
@@ -228,9 +234,116 @@ html_code = """<!DOCTYPE html>
 
     </div>
 
-    <!-- Embedded Database JSON -->
+    <!-- Embedded Vehicle Database and Logic -->
     <script>
-        const vehicleData = """ + json.dumps(categories_db, indent=2) + """;
+        // Database containing Maruti Suzuki models, variants, and pricing
+        const vehicleData = {
+            "Alto K10": [
+                { name: "Alto K10 Std", ex: 399000, rto: 31920, ins: 19950 },
+                { name: "Alto K10 LXi", ex: 483500, rto: 38680, ins: 23175 },
+                { name: "Alto K10 VXi", ex: 506000, rto: 40480, ins: 24280 },
+                { name: "Alto K10 VXi+", ex: 535000, rto: 42800, ins: 25680 },
+                { name: "Alto K10 VXi AGS", ex: 556000, rto: 44480, ins: 26680 },
+                { name: "Alto K10 VXi+ AGS", ex: 585000, rto: 46800, ins: 28080 },
+                { name: "Alto K10 LXi CNG", ex: 573500, rto: 45880, ins: 27528 },
+                { name: "Alto K10 VXi CNG", ex: 596000, rto: 47680, ins: 28608 }
+            ],
+            "S-Presso": [
+                { name: "S-Presso Std", ex: 426500, rto: 34120, ins: 21325 },
+                { name: "S-Presso LXi", ex: 501500, rto: 40120, ins: 24075 },
+                { name: "S-Presso VXi", ex: 521500, rto: 41720, ins: 25032 },
+                { name: "S-Presso VXi+", ex: 550500, rto: 44040, ins: 26424 },
+                { name: "S-Presso VXi AGS", ex: 566500, rto: 45320, ins: 27192 },
+                { name: "S-Presso VXi+ AGS", ex: 595500, rto: 47640, ins: 28584 },
+                { name: "S-Presso LXi CNG", ex: 591500, rto: 47320, ins: 28392 },
+                { name: "S-Presso VXi CNG", ex: 611500, rto: 48920, ins: 29352 }
+            ],
+            "Celerio": [
+                { name: "Celerio LXi", ex: 536500, rto: 42920, ins: 25752 },
+                { name: "Celerio VXi", ex: 583500, rto: 46680, ins: 28008 },
+                { name: "Celerio ZXi", ex: 611500, rto: 48920, ins: 29352 },
+                { name: "Celerio ZXi+", ex: 655500, rto: 52440, ins: 31464 },
+                { name: "Celerio VXi AGS", ex: 628500, rto: 50280, ins: 30168 },
+                { name: "Celerio ZXi AGS", ex: 656500, rto: 52520, ins: 31512 },
+                { name: "Celerio ZXi+ AGS", ex: 700500, rto: 56040, ins: 33624 },
+                { name: "Celerio VXi CNG", ex: 673500, rto: 53880, ins: 32328 }
+            ],
+            "WagonR": [
+                { name: "WagonR LXi 1.0", ex: 554500, rto: 44360, ins: 26616 },
+                { name: "WagonR VXi 1.0", ex: 599500, rto: 47960, ins: 28776 },
+                { name: "WagonR ZXi 1.2", ex: 628000, rto: 50240, ins: 30144 },
+                { name: "WagonR ZXi+ 1.2", ex: 675500, rto: 54040, ins: 32424 },
+                { name: "WagonR VXi 1.0 AGS", ex: 644500, rto: 51560, ins: 30936 },
+                { name: "WagonR ZXi 1.2 AGS", ex: 673000, rto: 53840, ins: 32304 },
+                { name: "WagonR ZXi+ 1.2 AGS", ex: 720500, rto: 57640, ins: 34584 },
+                { name: "WagonR LXi CNG", ex: 644500, rto: 51560, ins: 30936 },
+                { name: "WagonR VXi CNG", ex: 689500, rto: 55160, ins: 33096 }
+            ],
+            "Swift": [
+                { name: "Swift LXi", ex: 649000, rto: 51920, ins: 31152 },
+                { name: "Swift VXi", ex: 729500, rto: 58360, ins: 35016 },
+                { name: "Swift VXi (O)", ex: 756500, rto: 60520, ins: 36312 },
+                { name: "Swift ZXi", ex: 829500, rto: 66360, ins: 39816 },
+                { name: "Swift ZXi+", ex: 899500, rto: 71960, ins: 43176 },
+                { name: "Swift VXi AGS", ex: 779500, rto: 62360, ins: 37416 },
+                { name: "Swift VXi (O) AGS", ex: 806500, rto: 64520, ins: 38712 },
+                { name: "Swift ZXi AGS", ex: 879500, rto: 70360, ins: 42216 },
+                { name: "Swift ZXi+ AGS", ex: 949500, rto: 75960, ins: 45576 },
+                { name: "Swift VXi CNG", ex: 819500, rto: 65560, ins: 39336 },
+                { name: "Swift ZXi CNG", ex: 919500, rto: 73560, ins: 44136 }
+            ],
+            "Dzire": [
+                { name: "Dzire LXi", ex: 679000, rto: 54320, ins: 32592 },
+                { name: "Dzire VXi", ex: 779000, rto: 62320, ins: 37392 },
+                { name: "Dzire ZXi", ex: 889000, rto: 71120, ins: 42672 },
+                { name: "Dzire ZXi+", ex: 939000, rto: 75120, ins: 45072 },
+                { name: "Dzire VXi AGS", ex: 829000, rto: 66320, ins: 39792 },
+                { name: "Dzire ZXi AGS", ex: 939000, rto: 75120, ins: 45072 },
+                { name: "Dzire ZXi+ AGS", ex: 989000, rto: 79120, ins: 47472 },
+                { name: "Dzire VXi CNG", ex: 874000, rto: 69920, ins: 41952 },
+                { name: "Dzire ZXi CNG", ex: 984000, rto: 78720, ins: 47232 }
+            ],
+            "Brezza": [
+                { name: "Brezza LXi", ex: 834000, rto: 66720, ins: 40032 },
+                { name: "Brezza VXi", ex: 969500, rto: 77560, ins: 46536 },
+                { name: "Brezza ZXi", ex: 1114500, rto: 89160, ins: 53496 },
+                { name: "Brezza ZXi Dual Tone", ex: 1130500, rto: 90440, ins: 54264 },
+                { name: "Brezza ZXi+", ex: 1258000, rto: 100640, ins: 60384 },
+                { name: "Brezza ZXi+ Dual Tone", ex: 1274000, rto: 101920, ins: 61152 },
+                { name: "Brezza VXi AT", ex: 1119500, rto: 89560, ins: 53736 },
+                { name: "Brezza ZXi AT", ex: 1264500, rto: 101160, ins: 60696 },
+                { name: "Brezza ZXi+ AT", ex: 1398000, rto: 111840, ins: 67104 },
+                { name: "Brezza LXi CNG", ex: 929000, rto: 74320, ins: 44592 },
+                { name: "Brezza VXi CNG", ex: 1064500, rto: 85160, ins: 51096 },
+                { name: "Brezza ZXi CNG", ex: 1209500, rto: 96760, ins: 58056 }
+            ],
+            "Ertiga": [
+                { name: "Ertiga LXi", ex: 869000, rto: 69520, ins: 41712 },
+                { name: "Ertiga VXi", ex: 983000, rto: 78640, ins: 47184 },
+                { name: "Ertiga ZXi", ex: 1093000, rto: 87440, ins: 52464 },
+                { name: "Ertiga ZXi+", ex: 1163000, rto: 93040, ins: 55824 },
+                { name: "Ertiga VXi AT", ex: 1133000, rto: 90640, ins: 54384 },
+                { name: "Ertiga ZXi AT", ex: 1243000, rto: 99440, ins: 59664 },
+                { name: "Ertiga ZXi+ AT", ex: 1313000, rto: 105040, ins: 63024 },
+                { name: "Ertiga VXi CNG", ex: 1078000, rto: 86240, ins: 51744 },
+                { name: "Ertiga ZXi CNG", ex: 1188000, rto: 95040, ins: 57024 }
+            ],
+            "Eeco": [
+                { name: "Eeco 5-Seater STD", ex: 532000, rto: 42560, ins: 25536 },
+                { name: "Eeco 7-Seater STD", ex: 561000, rto: 44880, ins: 26928 },
+                { name: "Eeco 5-Seater AC", ex: 568000, rto: 45440, ins: 27264 },
+                { name: "Eeco Cargo Petrol", ex: 548000, rto: 43840, ins: 26304 },
+                { name: "Eeco Tour V 5-Seater AC", ex: 565000, rto: 45200, ins: 27120 },
+                { name: "Eeco 5-Seater AC CNG", ex: 658000, rto: 52640, ins: 31584 },
+                { name: "Eeco Cargo CNG", ex: 648000, rto: 51840, ins: 31104 }
+            ],
+            "Super Carry": [
+                { name: "Super Carry Petrol Cab Chassis", ex: 515000, rto: 41200, ins: 24720 },
+                { name: "Super Carry Petrol Deck", ex: 530000, rto: 42400, ins: 25440 },
+                { name: "Super Carry CNG Cab Chassis", ex: 615000, rto: 49200, ins: 29520 },
+                { name: "Super Carry CNG Deck", ex: 630000, rto: 50400, ins: 30240 }
+            ]
+        };
 
         function init() {
             const catSelect = document.getElementById('categorySelect');
@@ -340,13 +453,13 @@ html_code = """<!DOCTYPE html>
 
                     let tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td><span class="badge bg-secondary">\${cat}</span></td>
-                        <td class="fw-semibold">\${item.name}</td>
-                        <td>₹\${ex.toLocaleString('en-IN')}</td>
-                        <td>₹\${rto.toLocaleString('en-IN')}</td>
-                        <td>₹\${ins.toLocaleString('en-IN')}</td>
-                        <td>₹\${fastag.toLocaleString('en-IN')}</td>
-                        <td class="fw-bold text-primary">₹\${onRoad.toLocaleString('en-IN')}</td>
+                        <td><span class="badge bg-secondary">${cat}</span></td>
+                        <td class="fw-semibold">${item.name}</td>
+                        <td>₹${ex.toLocaleString('en-IN')}</td>
+                        <td>₹${rto.toLocaleString('en-IN')}</td>
+                        <td>₹${ins.toLocaleString('en-IN')}</td>
+                        <td>₹${fastag.toLocaleString('en-IN')}</td>
+                        <td class="fw-bold text-primary">₹${onRoad.toLocaleString('en-IN')}</td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -370,9 +483,3 @@ html_code = """<!DOCTYPE html>
     </script>
 </body>
 </html>
-"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_code)
-
-print("index.html written successfully!")
