@@ -1,414 +1,99 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arbit Automobiles Pvt. Ltd. - On-Road Price Estimator</title>
-  <style>
-    :root {
-      --arena-red: #e31837;
-      --arena-blue: #002b49;
-      --light-bg: #f4f6f9;
-      --text-color: #2c3e50;
-    }
+import pandas as pd
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.utils import get_column_letter
 
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: var(--light-bg);
-      color: var(--text-color);
-    }
+# 1. Purani Excel file load karein
+input_filename = 'New Microsoft Excel Worksheet_3.xlsx'  # Aapki input file ka naam
+df_raw = pd.read_excel(input_filename, header=None)
 
-    header {
-      background-color: var(--arena-blue);
-      color: white;
-      text-align: center;
-      padding: 20px 15px;
-      border-bottom: 5px solid var(--arena-red);
-    }
+# 2. Naya Excel Workbook create karein
+wb = openpyxl.Workbook()
+ws = wb.active
+ws.title = "Price List"
 
-    header h1 {
-      margin: 0;
-      font-size: 22px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+# Styling definitions
+header_fill = PatternFill(start_color="1F4E79", end_color="1F4E79", fill_type="solid")
+header_font = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
 
-    header p {
-      margin: 6px 0 0;
-      font-size: 14px;
-      opacity: 0.9;
-    }
+dealer_fill = PatternFill(start_color="D9E1F2", end_color="D9E1F2", fill_type="solid")
+dealer_font = Font(name="Calibri", size=12, bold=True, color="000000")
 
-    .dealer-badge {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.15);
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-top: 8px;
-      font-size: 13px;
-    }
+cat_fill = PatternFill(start_color="F2F2F2", end_color="F2F2F2", fill_type="solid")
+cat_font = Font(name="Calibri", size=11, bold=True, color="1F4E79")
 
-    .container {
-      max-width: 850px;
-      margin: 25px auto;
-      padding: 0 15px;
-    }
+thin_border = Border(
+    left=Side(style='thin', color='BFBFBF'),
+    right=Side(style='thin', color='BFBFBF'),
+    top=Side(style='thin', color='BFBFBF'),
+    bottom=Side(style='thin', color='BFBFBF')
+)
 
-    .filter-card {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      margin-bottom: 25px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
+# 3. Dealer ka Naam Header me merge karke add karein (Row 1)
+ws.merge_cells("A1:F1")
+ws["A1"] = df_raw.iloc[0, 0]  # Dealer Name & Address
+ws["A1"].font = dealer_font
+ws["A1"].fill = dealer_fill
+ws["A1"].alignment = Alignment(horizontal="center", vertical="center")
 
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-    }
+# 4. Table Headers set karein (Row 2)
+headers = ['Model Name', 'Ex-Showroom Price', 'RTO UP 53', 'Zero Dep Insurance', 'FASTag', '1 % TCS']
+for col_num, header in enumerate(headers, 1):
+    cell = ws.cell(row=2, column=col_num, value=header)
+    cell.font = header_font
+    cell.fill = header_fill
+    cell.alignment = Alignment(horizontal="center", vertical="center")
 
-    .filter-group label {
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--arena-blue);
-      margin-bottom: 6px;
-    }
+# 5. Data rows process karein
+current_row = 3
 
-    .filter-group select {
-      padding: 10px 14px;
-      font-size: 15px;
-      border: 2px solid var(--arena-blue);
-      border-radius: 6px;
-      outline: none;
-      min-width: 240px;
-      font-weight: 600;
-      background-color: white;
-      color: var(--arena-blue);
-      cursor: pointer;
-    }
-
-    .display-card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-      overflow: hidden;
-    }
-
-    .image-container {
-      background-color: #eef2f5;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 220px;
-    }
-
-    .image-container img {
-      max-width: 100%;
-      max-height: 240px;
-      object-fit: contain;
-    }
-
-    .details-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    .details-table th {
-      background-color: var(--arena-red);
-      color: white;
-      padding: 12px 16px;
-      font-size: 14px;
-      width: 40%;
-    }
-
-    .details-table td {
-      padding: 12px 16px;
-      border-bottom: 1px solid #eef2f5;
-      font-size: 15px;
-    }
-
-    .discount-input {
-      width: 130px;
-      padding: 6px 10px;
-      font-size: 15px;
-      font-weight: bold;
-      color: #e74c3c;
-      border: 2px solid #e74c3c;
-      border-radius: 4px;
-      outline: none;
-    }
-
-    .price-highlight {
-      font-size: 20px !important;
-      font-weight: bold;
-      color: #27ae60;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px 15px;
-      font-size: 12px;
-      color: #666;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1>Arbit Automobiles Pvt. Ltd.</h1>
-    <p>Falmandi, Transport Nagar, Gorakhpur</p>
-    <div class="dealer-badge">MARUTI SUZUKI ARENA - Price Breakup Estimator</div>
-  </header>
-
-  <div class="container">
+for i in range(2, len(df_raw)):
+    row_val = df_raw.iloc[i].tolist()
+    model_name = str(row_val[0]).strip() if pd.notna(row_val[0]) else ''
     
-    <!-- DROPDOWNS -->
-    <div class="filter-card">
-      <div class="filter-group">
-        <label for="modelSelect">1. Select Model Category:</label>
-        <select id="modelSelect" onchange="onModelChange()">
-          <option value="dzire">Dazzling New Dzire / Tour S</option>
-          <option value="spresso">S-Presso</option>
-          <option value="brezza">Brezza</option>
-          <option value="swift">Swift</option>
-          <option value="victoria">Victoris</option>
-          <option value="ertiga">Ertiga</option>
-          <option value="wagonr">Wagon R</option>
-          <option value="alto">Alto K10</option>
-        </select>
-      </div>
+    if not model_name:
+        continue
+        
+    # Agar Category Header ho (jaise NEW BREZZA, NEW ERTIGA)
+    if pd.isna(row_val[1]):
+        ws.merge_cells(start_row=current_row, start_column=1, end_row=current_row, end_column=6)
+        cell = ws.cell(row=current_row, column=1, value=model_name)
+        cell.font = cat_font
+        cell.fill = cat_fill
+        cell.alignment = Alignment(horizontal="left", vertical="center")
+    else:
+        # Car Variant Row
+        ex_price = float(row_val[1])
+        rto = float(row_val[2]) if pd.notna(row_val[2]) else 0
+        ins = float(row_val[3]) if pd.notna(row_val[3]) else 0
+        fastag = float(row_val[4]) if pd.notna(row_val[4]) else 600
+        
+        ws.cell(row=current_row, column=1, value=model_name)
+        ws.cell(row=current_row, column=2, value=ex_price)
+        ws.cell(row=current_row, column=3, value=rto)
+        ws.cell(row=current_row, column=4, value=ins)
+        ws.cell(row=current_row, column=5, value=fastag)
+        
+        # Excel Formula: Agar Ex-Showroom > 10,00,000 toh 1% TCS/TDS, nahi toh 0
+        tcs_formula = f'=IF(B{current_row}>1000000, B{current_row}*0.01, 0)'
+        ws.cell(row=current_row, column=6, value=tcs_formula)
+        
+        # Currency Format ₹
+        for c in range(2, 7):
+            ws.cell(row=current_row, column=c).number_format = '₹#,##0.00'
+            
+    # Borders
+    for c in range(1, 7):
+        ws.cell(row=current_row, column=c).border = thin_border
+        
+    current_row += 1
 
-      <div class="filter-group">
-        <label for="variantSelect">2. Select Variant:</label>
-        <select id="variantSelect" onchange="onVariantChange()"></select>
-      </div>
-    </div>
+# Column Widths auto adjust karein
+for col in ws.columns:
+    max_len = max(len(str(cell.value or '')) for cell in col)
+    col_letter = get_column_letter(col[0].column)
+    ws.column_dimensions[col_letter].width = max(max_len + 3, 15)
 
-    <!-- DISPLAY CARD -->
-    <div class="display-card">
-      <div class="image-container">
-        <img id="carImage" src="" alt="Loading Car Image..." crossorigin="anonymous">
-      </div>
-
-      <table class="details-table">
-        <tr>
-          <th>Dealer Name</th>
-          <td style="font-weight: bold; color: var(--arena-blue);">Arbit Automobiles Pvt. Ltd.</td>
-        </tr>
-        <tr>
-          <th>Model Name</th>
-          <td id="resModel" style="font-weight: bold;">-</td>
-        </tr>
-        <tr>
-          <th>Ex-Showroom Price</th>
-          <td id="resExShowroom">-</td>
-        </tr>
-        <tr>
-          <th>RTO UP 53</th>
-          <td id="resRTO">-</td>
-        </tr>
-        <tr>
-          <th>Zero Dep Insurance</th>
-          <td id="resInsurance">-</td>
-        </tr>
-        <tr>
-          <th>FASTag</th>
-          <td id="resFASTag">-</td>
-        </tr>
-        <tr>
-          <th>1 % TCS</th>
-          <td id="resTCS">-</td>
-        </tr>
-        <tr>
-          <th>Discount / Offer (Editable)</th>
-          <td>
-            ₹ <input type="number" id="discountInput" class="discount-input" value="0" oninput="calculateOnRoadPrice()">
-          </td>
-        </tr>
-        <tr style="background-color: #f8fafc;">
-          <th>Est. On-Road Price</th>
-          <td id="resOnRoad" class="price-highlight">-</td>
-        </tr>
-      </table>
-    </div>
-
-  </div>
-
-  <footer>
-    <p>* Arbit Automobiles Pvt. Ltd., Transport Nagar, Gorakhpur. Prices subject to state RTO updates & dealer offers.</p>
-  </footer>
-
-  <script>
-    // Drive File IDs:
-    const driveImageIds = {
-      dzire: "1oFlLDwJD7O8CCqDKSKjHReaJfXs_WED0", // <--- Aapki Dzire ID
-      victoria: "REPLACE_WITH_VICTORIA_FILE_ID",
-      spresso: "REPLACE_WITH_SPRESSO_FILE_ID",
-      brezza: "REPLACE_WITH_BREZZA_FILE_ID",
-      swift: "REPLACE_WITH_SWIFT_FILE_ID",
-      ertiga: "REPLACE_WITH_ERTIGA_FILE_ID",
-      wagonr: "REPLACE_WITH_WAGONR_FILE_ID",
-      alto: "REPLACE_WITH_ALTO_FILE_ID"
-    };
-
-    let currentExShowroom = 0;
-    let currentRTO = 0;
-    let currentInsurance = 0;
-    let currentFASTag = 0;
-    let currentTCS = 0;
-
-    const arenaCars = {
-      dzire: {
-        title: "Dazzling New Dzire",
-        imageId: driveImageIds.dzire,
-        variants: [
-          { name: "MARUTI DZIRE LXI 1.2L ISS 5MT", exShowroom: 630788.71, rto: 59070.98, insurance: 43986, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE VXI 1.2L ISS 5MT", exShowroom: 727288.36, rto: 67755.95, insurance: 48160, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE ZXI 1.2L ISS 5MT", exShowroom: 827888.42, rto: 76809.96, insurance: 53752, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE ZXI+ 1.2L ISS 5MT", exShowroom: 896488.90, rto: 82984.00, insurance: 55590, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE VXI 1.2L ISS AGS", exShowroom: 772288.84, rto: 71806.00, insurance: 49130, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE ZXI 1.2L ISS AGS", exShowroom: 872888.90, rto: 80860.00, insurance: 55633, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE ZXI+ 1.2L ISS AGS", exShowroom: 941488.20, rto: 87033.94, insurance: 57567, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE VXI CNG 1.2L 5MT", exShowroom: 818288.78, rto: 75945.99, insurance: 54826, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE ZXI CNG 1.2L 5MT", exShowroom: 918888.84, rto: 85000.00, insurance: 57185, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI TOUR S 1.2L ISS 5MT", exShowroom: 628988.03, rto: 58908.92, insurance: 45500, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI TOUR S CNG 1.2L 5MT", exShowroom: 724988.11, rto: 67548.93, insurance: 51500, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE VXI ISS CNG 1.2L AGS", exShowroom: 853288.49, rto: 79095.96, insurance: 56826, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "MARUTI DZIRE ZXI ISS CNG 1.2L AGS", exShowroom: 953888.50, rto: 88149.96, insurance: 59185, fastag: 600, tcs: 0, defaultDiscount: 0 }
-        ]
-      },
-      spresso: {
-        title: "Maruti Suzuki S-Presso",
-        imageId: driveImageIds.spresso,
-        variants: [
-          { name: "S-Presso Std", exShowroom: 426000, rto: 34000, insurance: 22000, fastag: 600, tcs: 0, defaultDiscount: 15000 },
-          { name: "S-Presso VXi", exShowroom: 521500, rto: 41500, insurance: 26000, fastag: 600, tcs: 0, defaultDiscount: 20000 }
-        ]
-      },
-      brezza: {
-        title: "Maruti Suzuki Brezza",
-        imageId: driveImageIds.brezza,
-        variants: [
-          { name: "Brezza LXi", exShowroom: 834000, rto: 66700, insurance: 38000, fastag: 600, tcs: 0, defaultDiscount: 10000 },
-          { name: "Brezza VXi", exShowroom: 969000, rto: 77500, insurance: 42000, fastag: 600, tcs: 0, defaultDiscount: 15000 }
-        ]
-      },
-      swift: {
-        title: "Maruti Suzuki Swift",
-        imageId: driveImageIds.swift,
-        variants: [
-          { name: "Swift LXi", exShowroom: 649000, rto: 51900, insurance: 30000, fastag: 600, tcs: 0, defaultDiscount: 20000 },
-          { name: "Swift VXi", exShowroom: 729000, rto: 58300, insurance: 33000, fastag: 600, tcs: 0, defaultDiscount: 20000 }
-        ]
-      },
-      victoria: {
-        title: "Maruti Suzuki Victoris",
-        imageId: driveImageIds.victoria,
-        variants: [
-          { name: "Victoris LXi", exShowroom: 650000, rto: 52000, insurance: 28000, fastag: 600, tcs: 0, defaultDiscount: 10000 },
-          { name: "Victoris VXi", exShowroom: 740000, rto: 59000, insurance: 32000, fastag: 600, tcs: 0, defaultDiscount: 15000 }
-        ]
-      },
-      ertiga: {
-        title: "Maruti Suzuki Ertiga",
-        imageId: driveImageIds.ertiga,
-        variants: [
-          { name: "Ertiga LXi", exShowroom: 869000, rto: 69500, insurance: 39000, fastag: 600, tcs: 0, defaultDiscount: 0 },
-          { name: "Ertiga VXi", exShowroom: 983000, rto: 78600, insurance: 43000, fastag: 600, tcs: 0, defaultDiscount: 0 }
-        ]
-      },
-      wagonr: {
-        title: "Maruti Suzuki Wagon R",
-        imageId: driveImageIds.wagonr,
-        variants: [
-          { name: "Wagon R LXi 1.0L", exShowroom: 554000, rto: 44300, insurance: 27000, fastag: 600, tcs: 0, defaultDiscount: 25000 }
-        ]
-      },
-      alto: {
-        title: "Maruti Suzuki Alto K10",
-        imageId: driveImageIds.alto,
-        variants: [
-          { name: "Alto K10 Std", exShowroom: 399000, rto: 31900, insurance: 21000, fastag: 600, tcs: 0, defaultDiscount: 15000 }
-        ]
-      }
-    };
-
-    function formatCurrency(amount) {
-      return "₹ " + (amount || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
-    }
-
-    function getDirectDriveUrl(fileId) {
-      return `https://lh3.googleusercontent.com/d/${fileId}`;
-    }
-
-    function onModelChange() {
-      const selectedModelKey = document.getElementById('modelSelect').value;
-      const car = arenaCars[selectedModelKey];
-      const variantSelect = document.getElementById('variantSelect');
-
-      let optionsHtml = '';
-      car.variants.forEach((v, index) => {
-        optionsHtml += `<option value="${index}">${v.name}</option>`;
-      });
-      variantSelect.innerHTML = optionsHtml;
-
-      onVariantChange();
-    }
-
-    function onVariantChange() {
-      const selectedModelKey = document.getElementById('modelSelect').value;
-      const variantIndex = document.getElementById('variantSelect').value;
-      
-      const car = arenaCars[selectedModelKey];
-      const selectedVariant = car.variants[variantIndex];
-
-      const imgElement = document.getElementById('carImage');
-      
-      if(car.imageId && !car.imageId.includes("REPLACE_WITH")) {
-        imgElement.src = getDirectDriveUrl(car.imageId);
-      } else {
-        imgElement.src = "https://via.placeholder.com/400x250?text=Drive+File+ID+Required";
-      }
-
-      imgElement.alt = car.title;
-
-      currentExShowroom = selectedVariant.exShowroom;
-      currentRTO = selectedVariant.rto;
-      currentInsurance = selectedVariant.insurance;
-      currentFASTag = selectedVariant.fastag || 0;
-      currentTCS = selectedVariant.tcs || 0;
-
-      document.getElementById('resModel').innerText = selectedVariant.name;
-      document.getElementById('resExShowroom').innerText = formatCurrency(currentExShowroom);
-      document.getElementById('resRTO').innerText = formatCurrency(currentRTO);
-      document.getElementById('resInsurance').innerText = formatCurrency(currentInsurance);
-      document.getElementById('resFASTag').innerText = formatCurrency(currentFASTag);
-      document.getElementById('resTCS').innerText = currentTCS ? formatCurrency(currentTCS) : "N/A";
-      
-      document.getElementById('discountInput').value = selectedVariant.defaultDiscount;
-
-      calculateOnRoadPrice();
-    }
-
-    function calculateOnRoadPrice() {
-      let userDiscount = parseFloat(document.getElementById('discountInput').value) || 0;
-      
-      let finalOnRoad = (currentExShowroom + currentRTO + currentInsurance + currentFASTag + currentTCS) - userDiscount;
-
-      document.getElementById('resOnRoad').innerText = formatCurrency(finalOnRoad);
-    }
-
-    window.onload = function() {
-      onModelChange();
-    };
-  </script>
-</body>
-</html>
+# 6. File Save karein
+wb.save("Updated_Maruti_Price_List.xlsx")
+print("File successfully created: Updated_Maruti_Price_List.xlsx")
